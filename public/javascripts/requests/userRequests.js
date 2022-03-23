@@ -9,7 +9,7 @@ async function login(name, password) {
               },
             body: JSON.stringify({ name: name, password: password}) 
         });
-        var  result= await response.json();
+        var  result = await response.json();
         return {logged: response.status==200 , result: result };
     } catch (err) {
         // Treat 500 errors here
@@ -28,8 +28,8 @@ async function register(player) {
               },
             body: JSON.stringify(player) 
         });
-        var  result= await response.json();
-        return {inserted: response.status==200 , result: result };
+        var  result = await response.json();
+        return {inserted: response.status==200 , result: result};
     } catch (err) {
         // Treat 500 errors here
         console.log(err);

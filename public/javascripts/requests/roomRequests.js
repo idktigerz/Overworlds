@@ -25,7 +25,7 @@ async function play(roomId, card) {
             body: JSON.stringify({ cardPlayed: card}) 
         });
         if (response.status == 200) {
-           var  result= await response.json();
+           var result = await response.json();
            return result;
         } else {
             // Treat errors like 404 here
