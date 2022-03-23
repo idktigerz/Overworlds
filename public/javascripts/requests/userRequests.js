@@ -18,9 +18,10 @@ async function login(name, password) {
 }
 
 async function register(player) {
+    console.log(typeof player.password)
     try {
         // TODO: Verify user information  and give errors
-        const response = await fetch("/api/users/register",
+        const response = await fetch(`/api/users/register`,
         {
             method: "POST",
             headers: {
@@ -33,6 +34,7 @@ async function register(player) {
     } catch (err) {
         // Treat 500 errors here
         console.log(err);
+        return {inserted: response.status==404 , result: err};
     }
 }
 

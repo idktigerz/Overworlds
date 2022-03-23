@@ -33,12 +33,13 @@ module.exports.loginCheck = async function (name, password) {
 
   module.exports.registerUser = async function (player){
     try {
-        let check_sql = `SELECT user_name FROM users WHERE user_name = $1`;
+        let check_sql = `SELECT ply_name FROM player where ply_name = $1`;//MUDA O NOME DAS TABELAS OH BOI
         let register_sql = `INSERT INTO users (user_name, user_password) VALUES ($1, $2)`;
         let result = await pool.query(register_sql, [player.name, player.password]);
+        //let result = await pool.query(`INSERT INTO users (user_name, user_password) VALUES ('${player.name}', '${player.password}')`);
         return { status: 200, result: result };
       }catch(err){
          console.log(err);
          return { status: 500, result: err }
-        }
       }
+  }
