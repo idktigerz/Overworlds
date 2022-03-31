@@ -1,6 +1,6 @@
 window.onload = async function() {
     let userInfo = await getUserInfo();
-    document.getElementById("username").innerHTML = userInfo.ply_name;   
+    document.getElementById("username").innerHTML = userInfo.user_name;   
     await fillRooms();
 }
 

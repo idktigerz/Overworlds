@@ -1,9 +1,9 @@
 async function registerUser() {
     try {
-        let name = document.getElementById("name").value;
+        let username = document.getElementById("username").value;
         let password = document.getElementById("password").value;
         let player = {
-            name: name,
+            username: username,
             password: password
         };
         let result = await register(player);
@@ -11,7 +11,7 @@ async function registerUser() {
             alert("Register was successful");
             window.location = "login.html"
         } else {
-            document.getElementById("result").innerHTML = "Not able to register";
+            document.getElementById("result").innerHTML = "Username not available";
         }
     } catch (err) {
         console.log(err);

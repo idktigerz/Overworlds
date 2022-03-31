@@ -1,8 +1,8 @@
 async function loginUser() {
     try {
-        let name = document.getElementById("name").value;
+        let username = document.getElementById("username").value;
         let password = document.getElementById("password").value;
-        let result = await login(name, password);
+        let result = await login(username, password);
         if (result.logged) {
             window.location = "lobby.html"
         } else {
