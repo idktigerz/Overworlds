@@ -5,6 +5,12 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Game</title>
+    <script src="./javascripts/requests/cardRequests.js"></script>
+    <script src="./javascripts/requests/roomRequests.js"></script>
+    <script src="./javascripts/requests/userRequests.js"></script> 
+    <script src="./javascripts/authentication/session.js"></script>
+    <script src="./javascripts/game.js"></script>
+    <!-- Game gui scripts -->
     <script src="./javascripts/p5.min.js"></script>
     <script src="./javascripts/renderers/card.js"></script>
     <script src="./javascripts/renderers/board.js"></script>
@@ -13,6 +19,12 @@
     <link rel="stylesheet" href="./stylesheets/style.css">
 </head>
 <body>
-    
+    <header>
+        <section class="auth">
+            <h4>User: <span id="username"></span> </h4>
+            <input type="button" value="Logout" onclick="logoutUser()">
+        </section>
+    </header>
+    <main id="game"></main>
 </body>
 </html>
