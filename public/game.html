@@ -16,15 +16,14 @@
     <script src="./javascripts/renderers/board.js"></script>
     <script src="./javascripts/managers/boardManager.js"></script>
     <script src="./javascripts/gamelib.js"></script>
-    <link rel="stylesheet" href="./stylesheets/style.css">
+    <link rel="stylesheet" href="./stylesheets/game.css">
 </head>
+<main id="game"></main>
 <body>
-    <header>
-        <section class="auth">
-            <h4>User: <span id="username"></span> </h4>
-            <input type="button" value="Logout" onclick="logoutUser()">
-        </section>
-    </header>
-    <main id="game"></main>
+    <section>
+        <h4>
+            <button onclick="leaveGame()">Forfeit</button>
+        </h4>
+    </section>
 </body>
 </html>

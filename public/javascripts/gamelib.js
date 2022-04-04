@@ -1,5 +1,5 @@
-const width = 1000;
-const height = 400;
+const width = 1920;
+const height = 919 ;
 
 var boardMan;
 

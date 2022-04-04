@@ -35,12 +35,12 @@ module.exports.loginCheck = async function (name, password) {
     try {
         let check_sql = `SELECT user_name FROM users where user_name = $1`;//MUDA O NOME DAS TABELAS OH BOI
         let register_sql = `INSERT INTO users (user_name, user_password) VALUES ($1, $2)`;
-        let check_result = await pool.query(check_sql, [player.name]);
-        let result = await pool.query(register_sql, [player.name, player.password]);
-        if (check_result.rows.length > 0) {
-          return { status: 401, result: {msg: "Username not available"}};
+        let check_result = await pool.query(check_sql, [player.username]);
+        let result = await pool.query(register_sql, [player.username, player.password]);
+        if (check_result.rows.length == 0) {
+          return { status: 200, result: result};
         }else{
-          return { status: 200, result: result };
+          return { status: 401, result: {msg: "Username not available"} };
         }
       }catch(err){
          console.log(err);

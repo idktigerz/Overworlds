@@ -18,7 +18,6 @@ async function login(name, password) {
 }
 
 async function register(player) {
-    console.log(typeof player.password)
     try {
         // TODO: Verify user information  and give errors
         const response = await fetch(`/api/users/register`,
