@@ -7,7 +7,7 @@ router.post('/login', async function(req, res, next) {
     console.log("Login")
     let name = req.body.name;
     let password = req.body.password;
-    let result = await uModel.loginCheck(name,password);
+    let result = await uModel.loginCheck(name, password);
     if (result.status == 200) {
         auth.saveUserId(res,result.result.userId);
         res.status(result.status).send({msg:"User logged in"});
