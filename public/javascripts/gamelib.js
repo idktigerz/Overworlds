@@ -1,22 +1,22 @@
-const width = 1920;
-const height = 919 ;
-
-var boardMan;
-
-function preload() {
-    BoardManager.preloadImages();
-    boardMan = new BoardManager(width,height,0,0,room);
-    boardMan.initBoard();
-}
+var button;
 
 function setup() {
-    var canvas = createCanvas(width, height);
+    button = createButton('Forfeit');
+    button.position(30, 15);
+    button.mouseClicked(leaveGame);
+    var canvas = createCanvas(windowWidth, windowHeight);
     canvas.parent('game');
 }
 function draw() {
     background(220);
-    boardMan.draw();
+    line(1, 40, windowWidth, 40);
 }
 function mouseClicked() {
     boardMan.click(mouseX,mouseY);     
+}
+
+function leaveGame(){
+    if (confirm("Are you sure you want to forfeit?")) {
+        window.location = "lobby.html"
+    }
 }

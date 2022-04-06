@@ -8,9 +8,3 @@ window.onload = async function() {
         window.location="lobby.html";
     }
 }
-
-function leaveGame(){
-    if (confirm("Are you sure you want to forfeit?")) {
-        window.location = "lobby.html"
-    }
-}
