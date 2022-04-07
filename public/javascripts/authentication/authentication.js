@@ -10,7 +10,7 @@ module.exports.checkAuthentication = function (req,res,next) {
     } else {
         // refresh token (not sure if there is a way of changing only the maxAge)
         res.cookie("userId", usr_id, 
-            {  maxAge: tokenExpiration,  httpOnly: true, signed:true});
+            {maxAge: tokenExpiration,  httpOnly: true, signed:true});
         req.userId = usr_id;
         next();
     }
@@ -18,9 +18,9 @@ module.exports.checkAuthentication = function (req,res,next) {
 
 // functions
 module.exports.saveUserId = function (res,userId) {    
-    res.cookie("userId", userId, {  maxAge: tokenExpiration, httpOnly: true, signed:true });
+    res.cookie("userId", userId, {maxAge: tokenExpiration, httpOnly: true, signed:true });
 }
 
 module.exports.logout = function (res) {
-    res.clearCookie("userId", {  httpOnly: true, signed:true});
+    res.clearCookie("userId", {httpOnly: true, signed:true});
 }

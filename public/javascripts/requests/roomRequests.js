@@ -53,8 +53,16 @@ async function getRooms() {
     }
 }
 
-/* async function getRoomById(matchID){
+async function getRoomById(matchID){
     try {
-        const response = await fetch(`/api/rooms/{}`)
+        const response = await fetch(`/api/rooms/${matchID}`)
+        if(response.status == 200){
+            var room = await response.json();
+            return room;
+        }else{
+            console.log(response);
+        }
+    }catch (err){
+        console.log(err)
     }
-} */
+}
