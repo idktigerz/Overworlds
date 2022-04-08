@@ -47,3 +47,19 @@ module.exports.loginCheck = async function (name, password) {
          return { status: 500, result: err }
       }
   }
+
+  module.exports.getUserID = async function (playerId) {
+    try {
+        let sql = `SELECT user_id from users WHERE user_id = $1`;
+        let result = await pool.query(sql, [playerId]);
+        if (result.rows.length > 0) {
+            let player = result.rows[0];
+            return { status: 200, result: player };
+        } else {
+            return { status: 404, result: { msg: "No user with that id" } };
+        }
+    } catch (err) {
+      console.log(err);
+      return { status: 500, result: err };
+    }
+  }

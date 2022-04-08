@@ -49,9 +49,6 @@ async function requestUserInfo() {
     }
 }
 
-
-
-
 async function logout() {
     try {
         const response = await fetch(`/api/users/logout`,

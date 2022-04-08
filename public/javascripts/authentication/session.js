@@ -1,3 +1,5 @@
+const { getUserID } = require("../../../models/playersModel");
+
 async function logoutUser() {
     try {
         let result = await logout();

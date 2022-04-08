@@ -6,4 +6,4 @@ window.onload = async function() {
 function openRoom(id) {
     sessionStorage.setItem("roomId",id);
     window.location = "game.html"
-}
+} 
