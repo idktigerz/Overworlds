@@ -39,7 +39,7 @@ module.exports.loginCheck = async function (name, password) {
         let result = await pool.query(register_sql, [player.username, player.password]);
         if (check_result.rows.length == 0) {
           return { status: 200, result: result};
-        }else{
+        }else{ 
           return { status: 401, result: {msg: "Username not available"} };
         }
       }catch(err){

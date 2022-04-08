@@ -22,13 +22,15 @@ router.get('/:id', async function(req, res, next) {
     res.status(result.status).send(result.result);
 });
 
-router.post('/:id/plays', async function(req, res, next) {
-    let id = req.params.id;
-    let cardPlayed = req.body.cardPlayed.toLowerCase();
-    console.log(`Played card ${cardPlayed} on room with id ${id}`);
-    let result = await rModel.play(id,cardPlayed);
+router.post('/create', async function(req, res, next){
+    let result = await rModel.createRoom();
     res.status(result.status).send(result.result);
 });
 
+router.post('/findRoom', async function(req, res, next){
+    let playerID = req.body.playerID;
+    let result = await rModel.createRoom(playerID);
+    res.status(result.status).send(result.result);    
+});
 
 module.exports = router;
