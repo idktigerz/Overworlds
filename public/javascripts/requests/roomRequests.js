@@ -69,7 +69,6 @@ async function getRoomById(matchID){
 
 async function createRoom(name){
     try {
-        // TODO: Verify user information  and give errors
         const response = await fetch(`/api/rooms/create`,
         {
             method: "POST",
@@ -81,7 +80,6 @@ async function createRoom(name){
         var result = await response.json();
         return {created: response.status==200 , result: result};
     } catch (err) {
-        // Treat 500 errors here
         console.log(err);
         return {created: response.status==404 , result: err};
     }

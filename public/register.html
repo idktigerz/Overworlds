@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register</title>
+    <link rel="stylesheet" href="./stylesheets/style.css">
+    <script src="./javascripts/requests/userRequests.js"></script>
+    <script src="./javascripts/authentication/register.js"></script>
+</head>
+<body>
+  <main>
+    <section>
+        <h2> Register information </h2>
+        <p> Username: <input type="text" id="username"></p>
+        <p> Password: <input type="password" id="password"> </p>
+        <input type="button" value="Register" onclick="registerUser()">
+        <p id="result"></p>
+        <p>Alredy have an account?<a href="login.html"> Sign in</a></p>
+    </section>
+  </main>
+</body>
+</html>

@@ -62,3 +62,25 @@ async function logout() {
         console.log(err);
     }
 }
+
+async function requestPlayer1Info() {
+    try {
+        const response = await fetch(`/api/player1`);
+        var result = await response.json();
+        return { status: 200 , result: result };
+    } catch (err) {
+        // Treat 500 errors here
+        console.log(err);
+    }
+}
+
+async function requestPlayer2Info() {
+    try {
+        const response = await fetch(`/api/player2`);
+        var result = await response.json();
+        return { status: 200 , result: result };
+    } catch (err) {
+        // Treat 500 errors here
+        console.log(err);
+    }
+}

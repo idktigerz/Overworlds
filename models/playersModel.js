@@ -33,7 +33,7 @@ module.exports.loginCheck = async function (name, password) {
 
   module.exports.registerUser = async function (player){
     try {
-        let check_sql = `SELECT user_username FROM users where user_username = $1`;//MUDA O NOME DAS TABELAS OH BOI
+        let check_sql = `SELECT user_username FROM users where user_username = $1`;
         let register_sql = `INSERT INTO users (user_username, user_password) VALUES ($1, $2)`;
         let check_result = await pool.query(check_sql, [player.username]);
         let result = await pool.query(register_sql, [player.username, player.password]);
@@ -60,6 +60,38 @@ module.exports.loginCheck = async function (name, password) {
         }
     } catch (err) {
       console.log(err);
+      return { status: 500, result: err };
+    }
+  }
+
+  module.exports.selectPlayerID1 = async function() {
+    try{
+        let sql = `SELECT * from player WHERE ply_id = 1`
+        let result = await pool.query(sql);
+        if (result.rows.length > 0){
+          let player = result.rows[0]; 
+          return { status:200, result:player }
+        }else{
+          return { status: 404, result: { msg: "No user with that id"} };
+        }
+    }catch(err){
+      console.log(err)
+      return { status: 500, result: err };
+    }
+  }
+
+  module.exports.selectPlayerID2 = async function() {
+    try{
+        let sql = `SELECT * from player WHERE ply_id = 2`
+        let result = await pool.query(sql);
+        if (result.rows.length > 0){
+          let player = result.rows[0]; 
+          return { status:200, result:player }
+        }else{
+          return { status: 404, result: { msg: "No user with that id"} };
+        }
+    }catch(err){
+      console.log(err)
       return { status: 500, result: err };
     }
   }

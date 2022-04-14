@@ -3,7 +3,17 @@ window.onload = async function() {
     document.getElementById("username").innerHTML = userInfo.user_username;   
 }
 
-function openRoom(id) {
-    sessionStorage.setItem("roomId",id);
-    window.location = "game.html"
-} 
+function createRooms(){
+    let result = await createRoom();
+
+}
+
+function selectPlayer1(){
+    let result = await selectPlayerID1();
+
+}
+
+function selectPlayer2(){
+    let result = await selectPlayerID2();
+
+}
