@@ -64,31 +64,15 @@ module.exports.loginCheck = async function (name, password) {
     }
   }
 
-  module.exports.selectPlayerID1 = async function() {
+  module.exports.selectPlayerID = async function(playerId) {
     try{
-        let sql = `SELECT * from player WHERE ply_id = 1`
-        let result = await pool.query(sql);
+        let sql = `SELECT * from player WHERE ply_id = $1`;
+        let result = await pool.query(sql, [playerId]);
         if (result.rows.length > 0){
           let player = result.rows[0]; 
-          return { status:200, result:player }
+          return { status:200, result: player }
         }else{
-          return { status: 404, result: { msg: "No user with that id"} };
-        }
-    }catch(err){
-      console.log(err)
-      return { status: 500, result: err };
-    }
-  }
-
-  module.exports.selectPlayerID2 = async function() {
-    try{
-        let sql = `SELECT * from player WHERE ply_id = 2`
-        let result = await pool.query(sql);
-        if (result.rows.length > 0){
-          let player = result.rows[0]; 
-          return { status:200, result:player }
-        }else{
-          return { status: 404, result: { msg: "No user with that id"} };
+          return { status: 404, result: { msg: "No player with that id"} };
         }
     }catch(err){
       console.log(err)

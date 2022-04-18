@@ -2,7 +2,7 @@ var button;
 
 function setup() {
     button = createButton('Forfeit');
-    button.position(30, 15);
+    //button.position(30, 15);
     button.mouseClicked(leaveGame);
     var canvas = createCanvas(windowWidth, windowHeight);
     canvas.parent('game');
@@ -17,6 +17,6 @@ function mouseClicked() {
 
 function leaveGame(){
     if (confirm("Are you sure you want to forfeit?")) {
-        window.location = "lobby.html"
+        window.location = "index.html"
     }
 }

@@ -33,16 +33,11 @@ router.post('/register', async function(req, res, next){
     res.status(result.status).send(result.result); 
 });
 
-router.get('/player1', async function(req, res, next){
-    console.log("Player 1")
-    let result = await uModel.selectPlayerID1();
-    res.status(result.status).send(resutlt.result);
-});
-
-router.get('/player2', async function(req, res, next){
-    console.log("Player 2")
-    let result = await uModel.selectPlayerID2();
-    res.status(result.status).send(resutlt.result);
+router.get('/player/:id', async function(req, res, next){
+    let id = req.params.id;
+    console.log("Player " + id)
+    let result = await uModel.selectPlayerID(id);
+    res.status(result.status).send(result.result);
 });
 
 module.exports = router;

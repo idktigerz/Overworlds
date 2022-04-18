@@ -63,22 +63,11 @@ async function logout() {
     }
 }
 
-async function requestPlayer1Info() {
+async function requestPlayerInfo(playerId) {
     try {
-        const response = await fetch(`/api/player1`);
+        const response = await fetch(`/api/users/player/${playerId}`);
         var result = await response.json();
-        return { status: 200 , result: result };
-    } catch (err) {
-        // Treat 500 errors here
-        console.log(err);
-    }
-}
-
-async function requestPlayer2Info() {
-    try {
-        const response = await fetch(`/api/player2`);
-        var result = await response.json();
-        return { status: 200 , result: result };
+        return { success: response.status==200 , result: result };
     } catch (err) {
         // Treat 500 errors here
         console.log(err);
