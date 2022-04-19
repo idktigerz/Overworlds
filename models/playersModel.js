@@ -34,10 +34,10 @@ module.exports.loginCheck = async function (name, password) {
   module.exports.registerUser = async function (player){
     try {
         let check_sql = `SELECT user_username FROM users where user_username = $1`;
-        let register_sql = `INSERT INTO users (user_username, user_password) VALUES ($1, $2)`;
         let check_result = await pool.query(check_sql, [player.username]);
-        let result = await pool.query(register_sql, [player.username, player.password]);
         if (check_result.rows.length == 0) {
+          let register_sql = `INSERT INTO users (user_username, user_password) VALUES ($1, $2)`;
+          let result = await pool.query(register_sql, [player.username, player.password]);
           return { status: 200, result: result};
         }else{ 
           return { status: 401, result: {msg: "Username not available"} };

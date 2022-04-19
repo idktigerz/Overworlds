@@ -15,7 +15,7 @@ module.exports.getAllRooms = async function() {
   
 module.exports.getRoomById = async function (id) {
   try {
-    let sql = `SELECT mch_id FROM matches WHERE mch_id = $1`;
+    let sql = `SELECT room_id FROM room WHERE room_id = $1`;
     let result = await pool.query(sql, [id]);
     if (result.rows.length > 0) {
       let room = result.rows[0];

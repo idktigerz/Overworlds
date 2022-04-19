@@ -2,7 +2,7 @@ var button;
 
 function setup() {
     button = createButton('Forfeit');
-    //button.position(30, 15);
+    button.position(30, 15);
     button.mouseClicked(leaveGame);
     var canvas = createCanvas(windowWidth, windowHeight);
     canvas.parent('game');
@@ -10,6 +10,7 @@ function setup() {
 function draw() {
     background(220);
     line(1, 40, windowWidth, 40);
+    
 }
 function mouseClicked() {
     boardMan.click(mouseX,mouseY);     

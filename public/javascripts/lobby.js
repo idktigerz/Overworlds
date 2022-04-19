@@ -8,9 +8,11 @@
 
 } */
 
-async function selectPlayer(id){
+
+async function selectPlayer(playerId){
+    console.log(playerId);
     try {
-        let result = await requestPlayerInfo(id);
+        let result = await requestPlayerInfo(playerId);
         if (result.success) {
             window.location = "game.html"
         } else {

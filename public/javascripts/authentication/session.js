@@ -23,9 +23,10 @@ async function logoutUser() {
     }
 } */
 
-async function getPlayerInfo(id) {
+/* async function getPlayerInfo(playerId) {
     try {
-        let result = await requestPlayerInfo(id);
+    
+        let result = await requestPlayerInfo(playerId);
         if (result.success) {
            return result.result;
         } else {
@@ -36,3 +37,4 @@ async function getPlayerInfo(id) {
         console.log(err);
     }
 }
+ */

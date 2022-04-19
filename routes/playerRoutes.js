@@ -2,7 +2,7 @@ var express = require('express');
 var router = express.Router();
 var uModel = require("../models/playersModel");
 var auth = require("../models/authentication")
-            
+ 
 router.post('/login', async function(req, res, next) {
     console.log("Login")
     let name = req.body.name;
@@ -35,7 +35,7 @@ router.post('/register', async function(req, res, next){
 
 router.get('/player/:id', async function(req, res, next){
     let id = req.params.id;
-    console.log("Player " + id)
+    console.log("Player " + id);
     let result = await uModel.selectPlayerID(id);
     res.status(result.status).send(result.result);
 });
