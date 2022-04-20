@@ -1,13 +1,9 @@
-const room = sessionStorage.getItem("roomId");
-var cardInfo 
+const room = sessionStorage.getItem("roomId"); 
 
 window.onload = async function() {
-    cardInfo = await getAllCardsInfo()
-    document.getElementById("cardName").innerHTML = cardInfo.card_crd_name;
-    document.getElementById("cardType").innerHTML = cardInfo.card_types_tp_name;
+    let cardInfo = await requestAllCardsInfo()
+    document.getElementById("cardName").innerHTML = cardInfo.cards_crd_name;
+    document.getElementById("cardType").innerHTML = cardInfo.cards_types_tp_name;
     document.getElementById("cardCost").innerHTML = cardInfo.card_crd_cost;
-    document.getElementById("cardAttack").innerHTML = cardInfo.card_crd_atk;
+    document.getElementById("cardAttack").innerHTML = cardInfo.cards_crd_atk;
 }
-
-
-module.exports.cardsInfo = cardInfo
