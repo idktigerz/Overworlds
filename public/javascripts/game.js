@@ -1,7 +1,8 @@
 const room = sessionStorage.getItem("roomId");
+var cardInfo 
 
 window.onload = async function() {
-    let cardInfo = await getAllCardsInfo();
+    cardInfo = await getAllCardsInfo()
     document.getElementById("cardName").innerHTML = cardInfo.card_crd_name;
     document.getElementById("cardType").innerHTML = cardInfo.card_types_tp_name;
     document.getElementById("cardCost").innerHTML = cardInfo.card_crd_cost;
@@ -9,3 +10,4 @@ window.onload = async function() {
 }
 
 
+module.exports.cardsInfo = cardInfo
