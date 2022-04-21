@@ -84,3 +84,17 @@ async function createRoom(name){
         return {created: response.status==404 , result: err};
     }
 }
+
+async function getMatch(){
+    try{
+        const response = await fetch(`/api/rooms/match`)
+        if(response.status == 200){
+            var match = await response.json();
+            return match;
+        }else{
+            console.log(response);
+        }        
+    }catch(err){
+        console.log(err)
+    }
+}

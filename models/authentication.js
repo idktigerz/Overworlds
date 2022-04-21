@@ -24,3 +24,7 @@ module.exports.saveUserId = function (res,userId) {
 module.exports.logout = function (res) {
     res.clearCookie("userId", {httpOnly: true, signed:true});
 }
+
+module.exports.savePlayerId = function (res, playerId) {
+    res.cookie("playerId", playerId, {maxAge: tokenExpiration, httpOnly: true, selected: true});
+}

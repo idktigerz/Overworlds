@@ -19,7 +19,7 @@ class Board {
         let nCards = 1 + playValues.length;
         this.cardWidth = width / (nCards + cardSpaceToBorder * 2 + spaceBetweenCards);
         this.cardHeight = height - topSpace - bottomSpace;
-        this.roomCard = new Card(this.cardWidth, this.cardHeight, x + this.cardWidth * cardSpaceToBorder, y + topSpace, topCard);
+        this.matchCard = new Card(this.cardWidth, this.cardHeight, x + this.cardWidth * cardSpaceToBorder, y + topSpace, topCard);
         this.cardValues = [];
         for (let pos in playValues) {
             this.cardValues.push(new Card(this.cardWidth,this.cardHeight, x + this.cardWidth * cardSpaceToBorder + this.cardWidth + this.cardWidth*spaceBetweenCards + pos * this.cardWidth,
@@ -27,7 +27,7 @@ class Board {
         }
     }
     draw() {
-        this.roomCard.draw();
+        this.matchCard.draw();
         for (let card of this.cardValues) {
             card.draw();
         }
@@ -44,11 +44,11 @@ class Board {
             if (card.clicked(x, y)) return card.getCard();
         return false;
     }    
-    roomCardClicked(x, y) {
-        return this.roomCard.clicked(x, y);
+    matchCardClicked(x, y) {
+        return this.matchCard.clicked(x, y);
     }
-    setRoomCard(card) {
-        this.roomCard.setCard(card);
+    setmatchCard(card) {
+        this.matchCard.setCard(card);
     }
     resetMsg() { this.msg = baseMsg; }
     setResult(win) {

@@ -20,24 +20,24 @@ class BoardManager {
         Card.initImgs(cardImgs);
     } 
     async initBoard() {
-        let room = await getRoom(this.room);
+        let match = await getMatch(this.match);
         this.board = new Board(this.width,this.height,this.x,this.y,
-                room.roo_topcard, playValues);   
+                match.roo_topcard, playValues);   
     }
     draw() { 
         if (this.board) this.board.draw(); 
     }
     async refresh () {
-        let room = await getRoom(this.room);
+        let room = await getMatch(this.match);
         this.board.setRoomCard(room.roo_topcard);
     }
     async play(value) {
-        let result = await play(this.room, value);
+        let result = await play(this.match, value);
         this.board.setResult(result.victory);
         this.board.setRoomCard(result.current_topcard);
     }
     async click(x,y) {
-        if (this.board.roomCardClicked(x,y)) {
+        if (this.board.matchCardClicked(x,y)) {
             this.refresh();
         } else {
             let value = this.board.valueClicked(x,y);

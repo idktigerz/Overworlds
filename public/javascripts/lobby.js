@@ -14,6 +14,7 @@ async function selectPlayer(playerId){
     try {
         let result = await requestPlayerInfo(playerId);
         if (result.success) {
+            sessionStorage.setItem("playerId",playerId);
             window.location = "game.html"
         } else {
             document.getElementById("result").innerHTML = "Cannot join game";
