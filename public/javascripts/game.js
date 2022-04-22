@@ -4,7 +4,7 @@ let adversId;
 
 window.onload = async function() {
     try {
-        let advInfo = await requestOpponent(playerId);
+        let advInfo = await requestOpponent(playerId);  
         document.getElementById("playerId").innerHTML = playerId;
     	adversId = advInfo.ply_ply_id;
         document.getElementById("opponentId").innerHTML = adversId;
