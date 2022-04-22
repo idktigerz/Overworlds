@@ -7,20 +7,22 @@
     <title>Game</title>    
     <script src="./javascripts/game.js"></script>
     <script src="./javascripts/requests/cardRequests.js"></script>
-    <script src="./javascripts/requests/roomRequests.js"></script>
+    <!-- <script src="./javascripts/requests/roomRequests.js"></script> -->
     <script src="./javascripts/requests/userRequests.js"></script> 
     <script src="./javascripts/authentication/session.js"></script>
     <!-- Game gui scripts -->
     <script src="./javascripts/p5.min.js"></script>
     <script src="./javascripts/renderers/card.js"></script>
     <script src="./javascripts/renderers/board.js"></script>
-    <script src="./javascripts/managers/boardManager.js"></script>
+    <!-- <script src="./javascripts/managers/boardManager.js"></script> -->
     <script src="./javascripts/gamelib.js"></script>
     <link rel="stylesheet" href="./stylesheets/game.css">
 </head>
 <body>
     <section>
         <main id="game">
+            <p>User ID: </p><p id="playerId"></p>
+            
             <button onclick="getCardByID(1)">Card 1</button>
             <button onclick="getCardByID(2)">Card 2</button>
             <button onclick="getCardByID(3)">Card 3</button>
@@ -30,6 +32,7 @@
             <p id="cardType"></p>
             <p id="cardCost"></p>
             <p id="cardAttack"></p>
+            
         </main>
     </section>
 </body>

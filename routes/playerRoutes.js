@@ -40,4 +40,10 @@ router.get('/player/:id', async function(req, res, next){
     res.status(result.status).send(result.result);
 });
 
+router.get('/:id/match/opponent', async function(req, res, next){
+    let id = req.params.id
+    console.log("Opponent of player " + id);
+    let result = await uModel.getAdv(id);
+    res.status(result.status).send(result.result);
+});
 module.exports = router;

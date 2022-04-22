@@ -3,7 +3,7 @@ var boardMan;
 
 function setup() {
     button = createButton('Forfeit');
-    button.position(100, 15);
+    button.position(windowWidth - 50, 1);
     button.mouseClicked(leaveGame);
     var canvas = createCanvas(windowWidth, windowHeight);
     canvas.parent('game');

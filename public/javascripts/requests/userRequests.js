@@ -73,3 +73,13 @@ async function requestPlayerInfo(playerId) {
         console.log(err);
     }
 }
+
+async function requestOpponent(playerId){
+    try {
+        const response = await fetch (`/api/users/${playerId}/match/opponent`)
+        var result = response.json();
+        return { success: response.status == 200, result: result}
+    } catch (err) {
+        console.log(err);
+    }
+}

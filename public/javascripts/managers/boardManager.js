@@ -2,12 +2,12 @@ var playValues=[];
 
 class BoardManager {
     
-    constructor(width,height,x,y, room) {
+    constructor(width,height,x,y, match) {
         this.width = width;
         this.height = height;
         this.x = x;
         this.y = y;
-        this.room = room;
+        this.match = match;
     }
     static async preloadImages() {
         let cardImgs = {}
@@ -28,13 +28,13 @@ class BoardManager {
         if (this.board) this.board.draw(); 
     }
     async refresh () {
-        let room = await getMatch(this.match);
-        this.board.setRoomCard(room.roo_topcard);
+        let match = await getMatch(this.match);
+        this.board.setMatchCard(match.roo_topcard);
     }
     async play(value) {
         let result = await play(this.match, value);
         this.board.setResult(result.victory);
-        this.board.setRoomCard(result.current_topcard);
+        this.board.setMatchCard(result.current_topcard);
     }
     async click(x,y) {
         if (this.board.matchCardClicked(x,y)) {

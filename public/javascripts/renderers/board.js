@@ -10,7 +10,7 @@ const resultMsgTimeout = 3000;
 
 // all sizes within Board are in percentages, this makes it easier to resize
 class Board {
-    constructor(width, height, x, y, topCard, playValues) {
+    constructor(width, height, x, y, playValues) {
         this.width = width;
         this.height = height;
         this.x = x;
@@ -19,7 +19,7 @@ class Board {
         let nCards = 1 + playValues.length;
         this.cardWidth = width / (nCards + cardSpaceToBorder * 2 + spaceBetweenCards);
         this.cardHeight = height - topSpace - bottomSpace;
-        this.matchCard = new Card(this.cardWidth, this.cardHeight, x + this.cardWidth * cardSpaceToBorder, y + topSpace, topCard);
+        this.matchCard = new Card(this.cardWidth, this.cardHeight, x + this.cardWidth * cardSpaceToBorder, y + topSpace);
         this.cardValues = [];
         for (let pos in playValues) {
             this.cardValues.push(new Card(this.cardWidth,this.cardHeight, x + this.cardWidth * cardSpaceToBorder + this.cardWidth + this.cardWidth*spaceBetweenCards + pos * this.cardWidth,
@@ -34,7 +34,7 @@ class Board {
         // text
         fill(0, 0, 0);
         textAlign(CENTER,CENTER);
-        text(topcardLabel, this.x + this.cardWidth * cardSpaceToBorder + this.cardWidth / 2, this.y + topSpace / 2);
+        text(this.x + this.cardWidth * cardSpaceToBorder + this.cardWidth / 2, this.y + topSpace / 2);
         text(valuesLabel, this.x + this.cardWidth * cardSpaceToBorder + this.cardWidth * spaceBetweenCards + this.cardWidth + (this.cardValues.length * this.cardWidth) / 2, this.y + topSpace / 2);
         text(this.msg, this.x + this.width / 2, this.y + this.height - bottomSpace / 2);
     }
@@ -47,7 +47,7 @@ class Board {
     matchCardClicked(x, y) {
         return this.matchCard.clicked(x, y);
     }
-    setmatchCard(card) {
+    setMatchCard(card) {
         this.matchCard.setCard(card);
     }
     resetMsg() { this.msg = baseMsg; }

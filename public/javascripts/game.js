@@ -4,8 +4,10 @@ let adversId;
 
 window.onload = async function() {
     try {
-        let advInfo = await getAdv(playerId);
-    	adversId = adv.ply_ply_id;
+        let advInfo = await requestOpponent(playerId);
+        document.getElementById("playerId").innerHTML = playerId;
+    	adversId = advInfo.ply_ply_id;
+        document.getElementById("opponentId").innerHTML = adversId;
     } catch (err) {
         console.log(err);
     }

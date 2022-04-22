@@ -79,3 +79,19 @@ module.exports.loginCheck = async function (name, password) {
       return { status: 500, result: err };
     }
   }
+
+  module.exports.getAdv = async function(playerId){
+    try {
+      let sql = `SELECT ply_ply_id from room_has_player WHERE room_room_id IN (SELECT room_room_id from room_has_player WHERE ply_ply_id = $1) and ply_ply_id != $1;`
+      let result = await pool.query(sql, [playerId]);
+      if (result.rows.length > 0 ){
+        let player = result.rows[0];
+        return { status: 200, result: player }
+      }else{
+        return { status: 404, result: { msg: "No player found" } };
+      }
+    }catch (err){
+      console.log(err);
+      return { status: 500, result: err };
+    }
+  }
