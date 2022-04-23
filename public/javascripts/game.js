@@ -7,7 +7,6 @@ window.onload = async function() {
         let advInfo = await requestOpponent(playerId);  
         document.getElementById("playerId").innerHTML = playerId;
     	adversId = advInfo.ply_ply_id;
-        document.getElementById("opponentId").innerHTML = adversId;
     } catch (err) {
         console.log(err);
     }
