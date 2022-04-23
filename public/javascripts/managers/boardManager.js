@@ -1,4 +1,4 @@
-var playValues=[];
+var cardValues=[];
 
 class BoardManager {
     
@@ -13,22 +13,22 @@ class BoardManager {
         let cardImgs = {}
         let cards = await getCards();
         for (let card of cards) {
-            let playValue = card.crd_name;
-            playValues.push(playValue);
-            cardImgs[playValue] = loadImage('./assets/'+playValue+'.png');
+            let cardValues = card.crd_name;
+            cardValues.push(cardValue);
+            cardImgs[cardValues] = loadImage('./assets/'+cardValue+'.png');
         }
         Card.initImgs(cardImgs);
     } 
     async initBoard() {
-        let match = await getMatch(this.match);
+        let card = await getRoomById(this.card);
         this.board = new Board(this.width,this.height,this.x,this.y,
-                match.roo_topcard, playValues);   
+                card.crd_id, cardValues);   
     }
     draw() { 
         if (this.board) this.board.draw(); 
     }
     async refresh () {
-        let match = await getMatch(this.match);
+        let card = await getCard(this.card);
         this.board.setMatchCard(card.crd_id);
     }
     async play(value) {

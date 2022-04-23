@@ -13,10 +13,10 @@ module.exports.getAllRooms = async function() {
     }
   }  
   
-module.exports.getRoomById = async function (id) {
+module.exports.getRoomById = async function () {
   try {
-    let sql = `SELECT room_id FROM room WHERE room_id = $1`;
-    let result = await pool.query(sql, [id]);
+    let sql = `SELECT room_id FROM room WHERE room_id = 2`;
+    let result = await pool.query(sql);
     if (result.rows.length > 0) {
       let room = result.rows[0];
       return { status: 200, result: room };
