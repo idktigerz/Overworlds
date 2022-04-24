@@ -10,19 +10,19 @@ const resultMsgTimeout = 3000;
 
 // all sizes within Board are in percentages, this makes it easier to resize
 class Board {
-    constructor(width, height, x, y, cardValues) {
+    constructor(width, height, x, y, playValues) {
         this.width = width;
         this.height = height;
         this.x = x;
         this.y = y;
-        let nCards = 1 + cardValues.length;
+        let nCards = 1 + playValues.length;
         this.cardWidth = width / (nCards + cardSpaceToBorder * 2 + spaceBetweenCards);
         this.cardHeight = height - topSpace - bottomSpace;
         this.matchCard = new Card(this.cardWidth, this.cardHeight, x + this.cardWidth * cardSpaceToBorder, y + topSpace);
         this.cardValues = [];
         for (let pos in cardValues) {
             this.cardValues.push(new Card(this.cardWidth,this.cardHeight, x + this.cardWidth * cardSpaceToBorder + this.cardWidth + this.cardWidth*spaceBetweenCards + pos * this.cardWidth,
-                                y + topSpace, cardValues[pos]));
+                                y + topSpace, playValues[pos]));
         }
     }
     draw() {

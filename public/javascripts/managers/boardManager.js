@@ -1,13 +1,13 @@
-var cardValues=[];
+var playValues=[];
 
 class BoardManager {
     
-    constructor(width,height,x,y, card) {
+    constructor(width, height, x, y, board) {
         this.width = width;
         this.height = height;
         this.x = x;
         this.y = y;
-        this.card = card;
+        this.board = board;
     }
     static async preloadImages() {
         let cardImgs = {}
@@ -20,7 +20,7 @@ class BoardManager {
         Card.initImgs(cardImgs);
     } 
     async initBoard() {
-        let card = await getRoomById(this.card);
+        let board = await getRoomById(this.board);
         this.board = new Board(this.width,this.height,this.x,this.y,
                 card.crd_id, cardValues);   
     }

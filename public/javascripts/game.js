@@ -1,4 +1,5 @@
-const room = sessionStorage.getItem("roomId"); 
+const room = 1;
+
 let playerId = sessionStorage.getItem("playerId");
 let adversId;
 
