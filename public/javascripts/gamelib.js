@@ -90,9 +90,7 @@ function leaveGame() {
 function mousePressed() {
     for (let i = 0; i < cards.length; i++) {
         if ((mouseX > placeX) && (mouseX < placeX + cards[i].width) & (mouseY > placeY) && (mouseY < placeY + cards[i].height)) {
-            fill(0);
-            break
-        }
+        }        
     }
 
 }
