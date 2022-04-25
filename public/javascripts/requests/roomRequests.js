@@ -82,3 +82,20 @@ async function getMatch(){
         console.log(err)
     }
 }
+
+async function requestPlaceCard(roomId, playerId, cardId, newCardId){
+    try {
+        const response = await fetch(`/api/rooms/${roomId}/player/card`, {
+            method: "POST",
+            headers:  {
+                "Content-Type": "application/json"
+              },
+            body: JSON.stringify({playerId, cardId, newCardId})
+    });
+        var result = response.json();
+        return {placed: response.status == 200, result: result};
+    } catch (err) {
+        console.log(err);
+        return {placed: response.status == 404, result: err};
+    }
+}

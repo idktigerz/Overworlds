@@ -4,6 +4,7 @@ let types = [];
 var placeX;
 var placeY;
 var placeTypeX;
+var cardSelected = false;
 
 
 async function setup() {
@@ -36,48 +37,90 @@ async function setup() {
             typeName: types_array[i].tp_name
         })
     }
-
-    
-
 }
 function draw() {
     background(220);
 
-    for (let i = 0; i < cards.length; i++) {
-        rect(placeX, placeY, cards[i].width, cards[i].height);
-        if (cards[i].cardType == 1) {
-            
-            text(cards[i].cardName, placeX, placeY + 40)
-            text("Card attack: " + cards[i].cardAtk, placeX, placeY + 160)
-            text("Card strike: " + cards[i].cardStk, placeX, placeY + 180)
-            text("Card health: " + cards[i].cardHealth, placeX, placeY + 200)
-            text("Cost: " + cards[i].cardCost, placeX + 100, placeY + 20)
-
-        } else if (cards[i].cardType == 2) {
-            text(cards[i].cardName, placeX, placeY + 40)
-            text("Card health: " + cards[i].cardHealth, placeX, placeY + 200)
-            text("Card attack: " + cards[i].cardAtk, placeX, placeY + 180)
-            text("Cost: " + cards[i].cardCost, placeX + 100, placeY + 20)
-
-        } else {
-            text(cards[i].cardName, placeX, placeY + 40)
-            text("Cost: " + cards[i].cardCost, placeX + 100, placeY + 20)
-
-        }
-
-        placeX += cards[i].width * 1.25
-    }
-
     for (let i = 0; i < types.length; i++) {
-        text("Type: " + types[i].typeName, placeTypeX, placeY + 20);
-        placeTypeX += cards[i].width * 1.25
+        if (cardSelected == true) {
+            placeX = 300;
+            placeTypeX = 300;
+            placeY = 100;
+            text("Type: " + types[i].typeName, placeTypeX, placeY + 20);
+            placeTypeX += cards[i].width * 1.25
+        }else{
+            placeX = 600;
+            placeTypeX = 600;
+            placeY = 800;
+            text("Type: " + types[i].typeName, placeTypeX, placeY + 20);
+            placeTypeX += cards[i].width * 1.25
+        }
+       
     }
-
-    placeX = 300;
-    placeTypeX = 300;
-    placeY = 100;
-
-
+    
+    for (i = 0; i < cards.length; i++){
+        if (cardSelected == true) {
+            placeX = 300;
+            placeTypeX = 300;
+            placeY = 100;
+            rect(placeX, placeY, cards[i].width, cards[i].height);
+                if (cards[i].cardType == 1) {
+                    
+                    text(cards[i].cardName, placeX, placeY + 40)
+                    text("Card attack: " + cards[i].cardAtk, placeX, placeY + 160)
+                    text("Card strike: " + cards[i].cardStk, placeX, placeY + 180)
+                    text("Card health: " + cards[i].cardHealth, placeX, placeY + 200)
+                    text("Cost: " + cards[i].cardCost, placeX + 100, placeY + 20)
+        
+        
+                } else if (cards[i].cardType == 2) {
+                    text(cards[i].cardName, placeX, placeY + 40)
+                    text("Card health: " + cards[i].cardHealth, placeX, placeY + 200)
+                    text("Card attack: " + cards[i].cardAtk, placeX, placeY + 180)
+                    text("Cost: " + cards[i].cardCost, placeX + 100, placeY + 20)
+    
+        
+                } else {
+                    text(cards[i].cardName, placeX, placeY + 40)
+                    text("Cost: " + cards[i].cardCost, placeX + 100, placeY + 20)
+                    
+        
+                }
+                placeX += cards[i].width * 1.25
+                break
+                
+        }else{
+                
+                rect(placeX, placeY, cards[i].width, cards[i].height);
+                if (cards[i].cardType == 1) {
+                    
+                    text(cards[i].cardName, placeX, placeY + 40)
+                    text("Card attack: " + cards[i].cardAtk, placeX, placeY + 160)
+                    text("Card strike: " + cards[i].cardStk, placeX, placeY + 180)
+                    text("Card health: " + cards[i].cardHealth, placeX, placeY + 200)
+                    text("Cost: " + cards[i].cardCost, placeX + 100, placeY + 20)
+        
+                } else if (cards[i].cardType == 2) {
+                    text(cards[i].cardName, placeX, placeY + 40)
+                    text("Card health: " + cards[i].cardHealth, placeX, placeY + 200)
+                    text("Card attack: " + cards[i].cardAtk, placeX, placeY + 180)
+                    text("Cost: " + cards[i].cardCost, placeX + 100, placeY + 20)
+        
+                } else {
+                    text(cards[i].cardName, placeX, placeY + 40)
+                    text("Cost: " + cards[i].cardCost, placeX + 100, placeY + 20)
+        
+                }
+        
+                placeX += cards[i].width * 1.25
+                
+            }
+    }
+    placeX = 600;
+    placeTypeX = 600;
+    placeY = 800;
+    
+   
     line(1, 40, windowWidth, 40);
 }
 
@@ -87,14 +130,28 @@ function leaveGame() {
     }
 }
 
-function mousePressed() {
+async function mousePressed() {
     for (let i = 0; i < cards.length; i++) {
         if ((mouseX > placeX) && (mouseX < placeX + cards[i].width) & (mouseY > placeY) && (mouseY < placeY + cards[i].height)) {
-        }        
+            console.log("Card selected " + cards[i].cardId)
+            try{
+                let result = await requestCardInfo(i + 1);
+                if (result) { 
+                    cardSelected = true 
+                    console.log(cardSelected)
+                }
+                break;
+            }catch(err){
+                console.log(err)
+            }
+        }
+        placeX += cards[i].width * 1.25;
     }
-
+    
 }
-function playCard() {
+function AttackCard() {
+    if (cardSelected == true){
 
+    }
 }
 

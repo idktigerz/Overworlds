@@ -28,21 +28,6 @@ module.exports.getRoomById = async function () {
     return { status: 500, result: err };
   }
 }
-
-/* module.exports.createRoom = async function (id){
-  try{
-    let checksql = `SELECT mch_id FROM matches WHERE mch_id = $1`;
-    let createsql = `INSERT INTO matches VALUES `;
-    let check_result = await pool.query(checksql, [player.username]);
-    let result = await pool.query(createsql );
-    if (check_result.rows.lenght == 0){
-
-    }
-  }catch (err){
-
-  }
-}
- */
 module.exports.createRoom = async function (playerID){
   try{
     let sql = `Select room.room_id from room, player where room.room_is_full = false 
@@ -66,5 +51,29 @@ module.exports.createRoom = async function (playerID){
   }catch (err){
     console.log(err);
     return { status: 500, result: err };
+  }
+}
+
+module.exports.placeCard = async function (roomId, playerId, cardId, newCardId){
+  try{
+    let sql = `SELECT room.room_id, ply.ply_id, current_card_played FROM room, player WHERE room.room_id= $1, ply.ply_id = $2`
+    let result = await pool.query(sql, [playerId, roomId]);
+    if (result.rows.length > 0){
+      sql = `SELECT current_card_played FROM room WHERE current_card_played = $3` 
+      result = await pool.query(sql, [cardId]);
+      if (result.rows.length == 0){
+        sql = `INSERT INTO room (current_card_played) VALUES ($3);`
+        result = await pool.query(sql, [cardId]);
+      }else{
+        sql = `UPDATE SET current_card_played = $4 WHERE current_card_played = $3;`
+        result = await pool.query(sql, [newCardId]);
+      }
+      return { status: 200, result: card}
+    }else{
+      return {status : 404, result: {msg: "No card found"}}
+    }
+  }catch(err){
+    console.log(err);
+    return { status: 500, result: err }
   }
 }

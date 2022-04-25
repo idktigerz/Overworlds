@@ -32,4 +32,13 @@ router.post('/findRoom', async function(req, res, next){
     res.status(result.status).send(result.result);    
 });
 
+router.post('/:id/player/card', async function(req, res, next){
+    let id = req.params.id;
+    let playerId = req.body.playerId;
+    let cardId = req.body.cardId;
+    let newCardId = req.body.newCardId;
+    let result = await rModel.placeCard(id, playerId, cardId, newCardId);
+    res.status(result.status).send(result.result);
+});
+
 module.exports = router;
