@@ -71,7 +71,7 @@ function draw() {
             placeY = 100;
             rect(placeX, placeY, cards[i].width, cards[i].height);
                 if (cards[i].cardType == 1) {
-                    
+                    text("Card is played", 100, 100)
                     text(cards[i].cardName, placeX, placeY + 40)
                     text("Card attack: " + cards[i].cardAtk, placeX, placeY + 160)
                     text("Card strike: " + cards[i].cardStk, placeX, placeY + 180)
@@ -80,6 +80,7 @@ function draw() {
         
         
                 } else if (cards[i].cardType == 2) {
+                    text("Card is played", 100, 100)
                     text(cards[i].cardName, placeX, placeY + 40)
                     text("Card health: " + cards[i].cardHealth, placeX, placeY + 200)
                     text("Card attack: " + cards[i].cardAtk, placeX, placeY + 180)
@@ -87,6 +88,7 @@ function draw() {
     
         
                 } else {
+                    text("Card is played", 100, 100)
                     text(cards[i].cardName, placeX, placeY + 40)
                     text("Cost: " + cards[i].cardCost, placeX + 100, placeY + 20)
                     
