@@ -1,4 +1,5 @@
 var button;
+var attackButton;
 let cards = [];
 let types = [];
 var placeX;
@@ -14,6 +15,11 @@ async function setup() {
     var canvas = createCanvas(windowWidth, windowHeight);
     canvas.parent('game');
 
+    if (cardSelected == true){
+        attackBtn = createButton("Attack card");
+        attackBtn.position(800, 400);
+        button.mousePressed(attackCard);
+    }
 
     let cards_array = await getAllCards()
     for (let i = 0; i < cards_array.length; i++) {
@@ -149,9 +155,7 @@ async function mousePressed() {
     }
     
 }
-function AttackCard() {
-    if (cardSelected == true){
-
-    }
+function attackCard() {
+   
 }
 
