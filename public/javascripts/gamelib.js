@@ -1,283 +1,102 @@
-/* var button;
-var boardMan;
+var button;
+let cards = [];
+let types = [];
+var placeX;
+var placeY;
+var placeTypeX;
 
 
-function setup() {
+async function setup() {
     button = createButton('Forfeit');
     button.position(windowWidth - 50, 1);
     button.mouseClicked(leaveGame);
     var canvas = createCanvas(windowWidth, windowHeight);
     canvas.parent('game');
-    boardMan = new BoardManager(width, height, 0, 0, room);
-    boardMan.initBoard();
+
+
+    let cards_array = await getAllCards()
+    for (let i = 0; i < cards_array.length; i++) {
+        cards.push({
+            cardHealth: cards_array[i].crd_hp,
+            cardCost: cards_array[i].crd_cost,
+            cardStk: cards_array[i].crd_stk,
+            cardAtk: cards_array[i].crd_atk,
+            cardId: cards_array[i].crd_id,
+            cardName: cards_array[i].crd_name,
+            cardDesc: cards_array[i].crd_dsc,
+            cardType: cards_array[i].crd_tp_id,
+            width: 140,
+            height: 220
+        })
+    }
+
+    let types_array = await requestAllCardsType()
+    for (let i = 0; i < types_array.length; i++) {
+        types.push({
+            typeName: types_array[i].tp_name
+        })
+    }
+
+    
+
 }
 function draw() {
     background(220);
+
+    for (let i = 0; i < cards.length; i++) {
+        rect(placeX, placeY, cards[i].width, cards[i].height);
+        if (cards[i].cardType == 1) {
+            
+            text(cards[i].cardName, placeX, placeY + 40)
+            text("Card attack: " + cards[i].cardAtk, placeX, placeY + 160)
+            text("Card strike: " + cards[i].cardStk, placeX, placeY + 180)
+            text("Card health: " + cards[i].cardHealth, placeX, placeY + 200)
+            text("Cost: " + cards[i].cardCost, placeX + 100, placeY + 20)
+
+        } else if (cards[i].cardType == 2) {
+            text(cards[i].cardName, placeX, placeY + 40)
+            text("Card health: " + cards[i].cardHealth, placeX, placeY + 200)
+            text("Card attack: " + cards[i].cardAtk, placeX, placeY + 180)
+            text("Cost: " + cards[i].cardCost, placeX + 100, placeY + 20)
+
+        } else {
+            text(cards[i].cardName, placeX, placeY + 40)
+            text("Cost: " + cards[i].cardCost, placeX + 100, placeY + 20)
+
+        }
+
+        placeX += cards[i].width * 1.25
+    }
+
+    for (let i = 0; i < types.length; i++) {
+        text("Type: " + types[i].typeName, placeTypeX, placeY + 20);
+        placeTypeX += cards[i].width * 1.25
+    }
+
+    placeX = 300;
+    placeTypeX = 300;
+    placeY = 100;
+
+
     line(1, 40, windowWidth, 40);
-    boardMan.draw()
-    
-}   
-function mouseClicked() {
-    boardMan.click(mouseX,mouseY);     
 }
 
-function leaveGame(){
+function leaveGame() {
     if (confirm("Are you sure you want to forfeit?")) {
         window.location = "index.html"
     }
-} */
-
-var monsterButton1;
-
-function setup() {
-    monsterButton1 = createButton('');
-    monsterButton1.position(412, 598);
-    monsterButton1.mouseClicked(leaveGame);
-    let cnv = createCanvas(windowWidth, windowHeight);
-    cnv.position(windowWidth / 6, windowHeight / 6);
-    
-  }
-  
-function draw() {
-    background(150);
-    
-    noStroke();
-    fill(0);
-    rect(980, 40, 780, 0);
-    
-    //Left-Side_Border
-    
-    noStroke();
-    fill(255,255, 255)
-    rect(20, 20, 760, 940, 10, 0, 0, 10);
-    
-    noStroke();
-    fill(55, 100, 255);
-    rect(196, 40, 584, 900)
-    
-    //Life Gauge
-    
-    noStroke();
-    fill(255);
-    rect(216, 60, 544, 126);
-    
-    //Mana Zone
-    
-    noStroke();
-    fill(200);
-    rect(640, 600, 120, 320);
-    
-    noFill();
-    strokeWeight(2);
-    stroke(255, 255, 255);
-    circle(726, 890, 50);
-    
-    noFill();
-    strokeWeight(2);
-    stroke(255, 255, 255);
-    circle(674, 860, 50);
-    
-    noFill();
-    strokeWeight(2);
-    stroke(255, 255, 255);
-    circle(726, 834, 50);
-    
-    noFill();
-    strokeWeight(2);
-    stroke(255, 255, 255);
-    circle(674, 804, 50);
-    
-    noFill();
-    strokeWeight(2);
-    stroke(255, 255, 255);
-    circle(726, 778, 50);
-    
-    noFill();
-    strokeWeight(2);
-    stroke(255, 255, 255);
-    circle(674, 748, 50);
-    
-    noFill();
-    strokeWeight(2);
-    stroke(255, 255, 255);
-    circle(726, 722, 50);
-    
-    noFill();
-    strokeWeight(2);
-    stroke(255, 255, 255);
-    circle(674, 692, 50);
-    
-    noFill();
-    strokeWeight(2);
-    stroke(255, 255, 255);
-    circle(726, 666, 50);
-    
-    noFill();
-    strokeWeight(2);
-    stroke(255, 255, 255);
-    circle(674, 636, 50);
-    
-    //Drop Zone
-    
-    noStroke();
-    fill(255);
-    rect(216, 794, 176, 126);
-    
-    //Deck Zone
-    
-    noStroke();
-    fill(255);
-    rect(412, 794, 176, 126);
-    
-    //Spell Zone
-    
-    noStroke();
-    fill(0, 255, 255);
-    rect(216, 206, 176);
-    
-    //Support Zone
-    
-    noStroke();
-    fill(0, 0, 255);
-    rect(216, 402, 176);
-    
-    //Field Zone
-    
-    noStroke();
-    fill(255, 0, 255);
-    rect(216, 598, 176);
-    
-    //Monster Zones
-    
-    noStroke();
-    fill(255, 0, 0);
-    rect(412, 598, 176);
-    
-    noStroke();
-    fill(255, 0, 0);
-    rect(412, 402, 176);
-    
-    noStroke();
-    fill(255, 0, 0);
-    rect(412, 206, 176);
-    
-    //Right-Side_Border
-    
-    noStroke();
-    fill(255, 255, 255)
-    rect(820, 20, 760, 940, 0, 10, 10, 0);
-    
-    noStroke();
-    fill(55, 100, 255);
-    rect(820, 40, 584, 900)
-    
-    //Life Gauge
-    
-    noStroke();
-    fill(255);
-    rect(840, 796, 544, 126);
-    
-    //Mana Zone
-    
-    noStroke();
-    fill(200);
-    rect(840, 60, 120, 320);
-    
-    noFill();
-    strokeWeight(2);
-    stroke(255, 255, 255);
-    circle(874, 90, 50);
-    
-    noFill();
-    strokeWeight(2);
-    stroke(255, 255, 255);
-    circle(926, 120, 50);
-    
-    noFill();
-    strokeWeight(2);
-    stroke(255, 255, 255);
-    circle(874, 146, 50);
-    
-    noFill();
-    strokeWeight(2);
-    stroke(255, 255, 255);
-    circle(926, 176, 50);
-    
-    noFill();
-    strokeWeight(2);
-    stroke(255, 255, 255);
-    circle(874, 202, 50);
-    
-    noFill();
-    strokeWeight(2);
-    stroke(255, 255, 255);
-    circle(926, 232, 50);
-    
-    noFill();
-    strokeWeight(2);
-    stroke(255, 255, 255);
-    circle(874, 258, 50);
-    
-    noFill();
-    strokeWeight(2);
-    stroke(255, 255, 255);
-    circle(926, 288, 50);
-    
-    noFill();
-    strokeWeight(2);
-    stroke(255, 255, 255);
-    circle(874, 314, 50);
-    
-    noFill();
-    strokeWeight(2);
-    stroke(255, 255, 255);
-    circle(926, 344, 50);
-    
-    //Drop Zone
-    
-    noStroke();
-    fill(255);
-    rect(1208, 60, 176, 126);
-    
-    //Deck Zone
-    
-    noStroke();
-    fill(255);
-    rect(1012, 60, 176, 126);
-    
-    //Spell Zone
-    
-    noStroke();
-    fill(0, 255, 255);
-    rect(1208, 600, 176);
-    
-    //Support Zone
-    
-    noStroke();
-    fill(0, 0, 255);
-    rect(1208, 402, 176);
-    
-    //Field Zone
-    
-    noStroke();
-    fill(255, 0, 255);
-    rect(1208, 206, 176);
-    
-    //Monster Zones
-    
-    noStroke();
-    fill(255, 0, 0);
-    rect(1012, 600, 176);
-    
-    noStroke();
-    fill(255, 0, 0);
-    rect(1012, 402, 176);
-    
-    noStroke();
-    fill(255, 0, 0);
-    rect(1012, 206, 176);
-  }
-
-function mouseClicked() {
-    boardMan.click(mouseX,mouseY);     
 }
+
+function mousePressed() {
+    for (let i = 0; i < cards.length; i++) {
+        if ((mouseX > placeX) && (mouseX < placeX + cards[i].width) & (mouseY > placeY) && (mouseY < placeY + cards[i].height)) {
+            fill(0);
+            break
+        }
+    }
+
+}
+function playCard() {
+
+}
+

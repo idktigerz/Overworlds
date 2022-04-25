@@ -7,49 +7,52 @@ const topSpace = 60;
 const bottomSpace = 90;
 
 const resultMsgTimeout = 3000;
-
 // all sizes within Board are in percentages, this makes it easier to resize
 class Board {
-    constructor(width, height, x, y, playValues) {
+    constructor(width,height,x,y, playValues) {
         this.width = width;
         this.height = height;
         this.x = x;
         this.y = y;
-        let nCards = 1 + playValues.length;
-        this.cardWidth = width / (nCards + cardSpaceToBorder * 2 + spaceBetweenCards);
-        this.cardHeight = height - topSpace - bottomSpace;
-        this.matchCard = new Card(this.cardWidth, this.cardHeight, x + this.cardWidth * cardSpaceToBorder, y + topSpace);
+        this.msg = baseMsg;
+        let nCards = 1+playValues.length;
+        this.cardWidth = width/(nCards+cardSpaceToBorder*2+spaceBetweenCards);
+        this.cardHeight = height-topSpace-bottomSpace;
+        this.roomCard = new Card(this.cardWidth,this.cardHeight,
+                                 x+this.cardWidth*cardSpaceToBorder,
+                                 y+topSpace);
         this.cardValues = [];
-        for (let pos in cardValues) {
-            this.cardValues.push(new Card(this.cardWidth,this.cardHeight, x + this.cardWidth * cardSpaceToBorder + this.cardWidth + this.cardWidth*spaceBetweenCards + pos * this.cardWidth,
-                                y + topSpace, playValues[pos]));
+        for (let pos in playValues) {
+            this.cardValues.push(new Card(this.cardWidth,this.cardHeight, x+this.cardWidth*cardSpaceToBorder+this.cardWidth+this.cardWidth*spaceBetweenCards+pos*this.cardWidth, y+topSpace,playValues[pos]));
         }
     }
     draw() {
-        this.matchCard.draw();
+        this.roomCard.draw();
         for (let card of this.cardValues) {
             card.draw();
         }
         // text
-        fill(0, 0, 0);
+        fill(0,0,0);
         textAlign(CENTER,CENTER);
-        text(this.x + this.cardWidth * cardSpaceToBorder + this.cardWidth / 2, this.y + topSpace / 2);
-        text(valuesLabel, this.x + this.cardWidth * cardSpaceToBorder + this.cardWidth * spaceBetweenCards + this.cardWidth + (this.cardValues.length * this.cardWidth) / 2, this.y + topSpace / 2);
-        text(this.msg, this.x + this.width / 2, this.y + this.height - bottomSpace / 2);
+        text(this.x+this.cardWidth*cardSpaceToBorder+this.cardWidth/2, 
+            this.y+topSpace/2);
+        text(this.x+this.cardWidth*cardSpaceToBorder+
+                this.cardWidth*spaceBetweenCards+this.cardWidth+
+                (this.cardValues.length*this.cardWidth)/2, this.y+topSpace/2);
+        text(this.msg, this.x+this.width/2, this.y+this.height-bottomSpace/2);
     }
 
-    valueClicked(x, y) {
+    valueClicked(x,y) {
         for (let card of this.cardValues)
-            if (card.clicked(x, y)) return card.getCard();
+            if (card.clicked(x,y)) return card.getCard();
         return false;
     }    
-    matchCardClicked(x, y) {
-        return this.matchCard.clicked(x, y);
+    roomCardClicked(x,y) {
+        return this.roomCard.clicked(x,y);
     }
-    setMatchCard(card) {
-        this.matchCard.setCard(card);
+    setRoomCard(card) {
+        this.roomCard.setCard(card);
     }
-    resetMsg() { this.msg = baseMsg; }
     setResult(win) {
         if (win) this.msg = winMsg;
         else this.msg = looseMsg;

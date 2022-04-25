@@ -15,10 +15,9 @@ router.get('/filter', async function(req, res, next) {
     res.status(result.status).send(result.result);
 });
 
-router.get('/:id', async function(req, res, next) {
-    let id = req.params.id;
-    console.log("Get room with id "+id)
-    let result = await rModel.getRoomById(id);
+router.get('/2', async function(req, res, next) {
+    console.log("Get room with id 2")
+    let result = await rModel.getRoomById();
     res.status(result.status).send(result.result);
 });
 

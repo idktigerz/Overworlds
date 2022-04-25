@@ -13,6 +13,12 @@ router.get('/info', async function(req, res, next){
     res.status(result.status).send(result.result);
 });
 
+router.get('/types', async function(req, res, next){
+    console.log("Get all card types");
+    let result = await cModel.getAllCardTypes();
+    res.status(result.status).send(result.result);
+});
+
 router.get('/:id', async function(req, res, next){
     let id = req.params.id;
     console.log("Get card with id " + id);

@@ -14,6 +14,7 @@ async function getCard(cardId) {
     }
 }
 
+
 async function getAllCards(){
     try{
         const response = await fetch(`/api/cards`);
@@ -48,6 +49,20 @@ async function requestCardType(cardId){
         if (response.status == 200){
             var card = response.json();
             return card;
+        }else{
+            console.log(response);
+        }
+    }catch(err){
+        console.log(err);
+    }
+}
+
+async function requestAllCardsType(){
+    try{
+        const response = await fetch(`/api/cards/types`);
+        if (response.status == 200){
+            var types = response.json();
+            return types;
         }else{
             console.log(response);
         }

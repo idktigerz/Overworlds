@@ -13,23 +13,20 @@ class BoardManager {
         let cardImgs = {}
         let cards = await getCards();
         for (let card of cards) {
-            let cardValues = card.crd_name;
-            cardValues.push(cardValue);
-            cardImgs[cardValues] = loadImage('./assets/'+cardValue+'.png');
+            let playValues = card.crd_name;
+            playValues.push(playValue);
         }
-        Card.initImgs(cardImgs);
     } 
     async initBoard() {
-        let board = await getRoomById(this.board);
-        this.board = new Board(this.width,this.height,this.x,this.y,
-                card.crd_id, cardValues);   
+        let board = await getRoom(this.board);
+        this.board = new Board(this.width, this.height, this.x, this.y, playValues);   
     }
     draw() { 
         if (this.board) this.board.draw(); 
     }
     async refresh () {
-        let card = await getCard(this.card);
-        this.board.setMatchCard(card.crd_id);
+        let room = await getRoom(this.room);
+        this.board.setMatchCard(room.crd_id);
     }
     async play(value) {
         let result = await play(this.match, value);

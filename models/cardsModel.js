@@ -68,6 +68,23 @@ module.exports.getCardType = async function (cardId) {
   }
 }
 
+module.exports.getAllCardTypes = async function () {
+  try{
+    let sql = `SELECT tp_name, tp_dsc, crd_id FROM card_types
+               INNER JOIN cards ON crd_tp_id = tp_id;`
+    let result = await pool.query(sql);
+    if (result.rows.length > 0){
+      let card = result.rows;
+      return { status: 200, result: card };
+    }else{
+      return { status: 404, result: {msg: "This card has no type or no card found with that ID"} };
+    }
+  }catch(err){
+    console.log(err);
+    return { status : 500, result: err };
+  }
+}
+
 module.exports.getCardInfo = async function (cardId) {
   try{
     let sql = `SELECT tp_name, tp_dsc, 
@@ -93,7 +110,7 @@ module.exports.getAllCardsInfo = async function (){
   try{
     let sql = `SELECT tp_name, tp_dsc, 
                crd_id, crd_name, crd_clan, crd_family, crd_atk, crd_stk, 
-               crd_hp, crd_cost, crd_count, crd_dsc, crd_img  
+               crd_hp, crd_cost, crd_count, crd_dsc, crd_img 
                FROM cards 
                INNER JOIN card_types ON crd_tp_id = tp_id`
     let result = await pool.query(sql);
