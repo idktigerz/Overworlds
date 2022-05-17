@@ -1,26 +1,23 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    
-    <title>Lobby</title>
+<html>
 
-    <link rel="stylesheet" href="./stylesheets/style.css">
-    <link rel="stylesheet" href="./stylesheets/rooms.css">
-    
-    <script src="./javascripts/requests/userRequests.js"></script>
-    <script src="./javascripts/requests/roomRequests.js"></script>
-    <script src="./javascripts/authentication/session.js"></script>
-    <script src="./javascripts/lobby.js"></script>
-</head>
+<head>
+  <title>Express</title>
+  <link rel="stylesheet" href="/stylesheets/style.css">
+  <script src="./javascripts/requests/loginAndMatchRequests.js"></script>
+  <script src="./javascripts/requests/playerRequests.js"></script>
+  <script src="./javascripts/login.js"></script>
+</head>  
 <body>
-  </header>
-  <main id="rooms">
-    <input type="button" value="Player 1" onclick="selectPlayer(1)">
-    <input type="button" value="Player 2" onclick="selectPlayer(2)">
+  <header>  <h1>Login</h1></header>
+  <main>
+    <p> If you have a match running you will enter that match.
+      Otherwise it will go to the match making page.
+    </p>
+    <p>Name:<input type="text" id="name"></p>
+    <p>Password:<input type="password" id="password"></p>
+    <p><input type="button" value="Login" onclick="login()"></p>
+    <p><a href="register.html">Create a new account</a></p>
   </main>
-  <p id="result"></p>
 </body>
+
 </html>

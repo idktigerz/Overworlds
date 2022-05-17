@@ -1,163 +1,297 @@
-var button;
-var attackButton;
-let cards = [];
-let types = [];
-var placeX;
-var placeY;
-var placeTypeX;
-var cardSelected = false;
+var playerId;
+var scoreBoard;
+var gameOver;
 
+var attackButton = new Button("Attack", 700, 350, attack);
+var playButton = new Button("Play card", 750, 350, play);
+var endTurnButton = new Button("End turn", 800, 350, end);
+var buttons = [ attackButton, playButton, endTurnButton ];
+
+
+var startingTurn = false;
+
+const CARDSPACE = 150;
+
+var deck = [];
+const DECKX = 1000
+const DECKY = 700
+
+var hand = [];
+const HANDX = 300;
+const HANDY = 770;
+
+var board = [];
+const BOARDX = 400;
+const BOARDY = 450;
+
+var discard = [];
+const DISCARDX = 600;
+const DISCARDY = 700;
+
+var playerHealth = [];
+const HEATLHX = 10;
+const HEATLHY = 700
+
+var opDeck = [];
+const OPDECKX = 1000;
+const OPDECKY = 50;
+
+var opHand = [];
+const OPHANDX = 400;
+const OPHANDY = 1;
+
+var opBoard = [];
+const OPBOARDX = 400;
+const OPBOARDY = 250;
+
+var opDiscard = [];
+const OPDISCARDX = 400;
+const OPDISCARDY = 50;
+
+var opHealth = [];
+const OPHEALTHX = 10;
+const OPHEALTHY = 50;
+
+async function refresh() {
+    if (scoreBoard && 
+        (scoreBoard.getPlayerState() == "Setup" ||
+        scoreBoard.getPlayerState() == "Battle")) {
+            await loadScoreBoard();
+            await loadCards();
+            setCardsState();
+            startingTurn = true;        
+    } else {
+        if (startingTurn) {
+            await loadScoreBoard();
+            await loadCards();
+            setCardsState();
+            refreshButtons();
+            startingTurn = false;            
+        }
+    } 
+}
+
+async function play() {
+    let card = returnSelected(hand);
+    await requestPlay(playerId,playerMatchId,card.getId());
+    await loadScoreBoard();
+    await loadCards();
+    setCardsState();
+    refreshButtons();
+}
+
+async function attack() {
+    let card = returnSelected(board);
+    let ocard = returnSelected(opBoard);
+    await requestAttack(playerId,playerMatchId,card.getId(),ocard.getId());
+    await loadCards();
+    setCardsState();
+    refreshButtons();
+}
+
+async function attackPlayer() {
+    let card = returnSelected(board);
+    await requestAttackPlayer(playerId,playerMatchId,card.getId());
+    await loadCards();
+    await loadScoreBoard();
+    setCardsState();
+    refreshButtons();
+}
+
+async function end() {
+    await requestEndTurn(playerId,playerMatchId);
+    await loadCards();
+    await loadScoreBoard();
+    setCardsState();
+    refreshButtons();
+} 
+
+async function loadScoreBoard() {
+    let p1 = await requestPlayerMatchInfo(playerMatchId);
+    let p2 = await requestPlayerMatchInfo(opponentMatchId);
+    playerId = p1.usr_id;
+    gameOver = p1.mtc_finished;
+    scoreBoard = new ScoreBoard(p1.usr_name, p2.usr_name, p1.pm_hp, p2.pm_hp, p1.pm_mana, p2.pm_mana, p1.pm_st_name, p2.pm_st_name, p1.mtc_turn);
+}
+
+function preload() {
+
+}
 
 async function setup() {
-    button = createButton('Forfeit');
-    button.position(windowWidth - 50, 1);
-    button.mouseClicked(leaveGame);
-    var canvas = createCanvas(windowWidth, windowHeight);
+    noLoop();
+    let canvas = createCanvas(windowWidth, windowHeight);
     canvas.parent('game');
+    await loadScoreBoard();
+    setCardsState();
+    refreshButtons();
+    setInterval(refresh,1000);
+    loop();
+}
 
-    if (cardSelected == true){
-        attackBtn = createButton("Attack card");
-        attackBtn.position(800, 400);
-        button.mousePressed(attackCard);
+function refreshButtons() {
+    for(let button of buttons) {
+        button.hide();
+        button.disable();
     }
-
-    let cards_array = await getAllCards()
-    for (let i = 0; i < cards_array.length; i++) {
-        cards.push({
-            cardHealth: cards_array[i].crd_hp,
-            cardCost: cards_array[i].crd_cost,
-            cardStk: cards_array[i].crd_stk,
-            cardAtk: cards_array[i].crd_atk,
-            cardId: cards_array[i].crd_id,
-            cardName: cards_array[i].crd_name,
-            cardDesc: cards_array[i].crd_dsc,
-            cardType: cards_array[i].crd_tp_id,
-            width: 140,
-            height: 220
-        })
-    }
-
-    let types_array = await requestAllCardsType()
-    for (let i = 0; i < types_array.length; i++) {
-        types.push({
-            typeName: types_array[i].tp_name
-        })
+    if (scoreBoard.getPlayerState() === "Setup") {
+        playButton.show();
+        if (returnSelected(hand)) playButton.enable();
+    } else if (scoreBoard.getPlayerState() === "Battle") {
+        attackButton.show();
+        endTurnButton.show();
+        endTurnButton.enable();
+        let countAlive = 0;
+        for(let card of opBoard) 
+        if (card.getHp() > 0) countAlive++;
+        if (countAlive == 0) {
+            attackButton.setNewFunc(attackPlayer,"Attack Player");
+            if (returnSelected(board)) attackButton.enable();
+        } else {
+            attackButton.setNewFunc(attack,"Attack");
+            if (returnSelected(board) && returnSelected(opBoard)) 
+                attackButton.enable();      
+        }
     }
 }
-function draw() {
-    background(220);
 
-    for (let i = 0; i < types.length; i++) {
-        if (cardSelected == true) {
-            placeX = 300;
-            placeTypeX = 300;
-            placeY = 100;
-            text("Type: " + types[i].typeName, placeTypeX, placeY + 20);
-            placeTypeX += cards[i].width * 1.25
-        }else{
-            placeX = 600;
-            placeTypeX = 600;
-            placeY = 800;
-            text("Type: " + types[i].typeName, placeTypeX, placeY + 20);
-            placeTypeX += cards[i].width * 1.25
+function setCardsState() {
+    for (let card of hand) card.disable();
+    for (let card of deck) card.disable()
+    for (let card of board) card.disable();
+    for (let card of playerHealth) card.disable();
+    for (let card of opHand) card.disable();
+    for (let card of opHealth) card.disable();
+    for (let card of opDeck) card.disable();
+    for (let card of opBoard) card.disable();
+
+    if (scoreBoard.getPlayerState() === "Setup") {
+        for (let card of hand) card.enable();
+    } else if (scoreBoard.getPlayerState() === "Battle") {
+        for (let card of board) 
+           if (!card.hasAttacked()) card.enable();
+        for (let card of opBoard) card.enable();
+        if (returnSelected(board)) {
+            for (let card of opBoard) 
+                if (card.getHp() > 0) card.enable();
         }
+    }   
+}
+
+
+
+async function loadCards() {
+    let myCards = await requestPlayerMatchDeck(playerId, playerMatchId);
+    let opCards = await requestPlayerMatchDeck(playerId, opponentMatchId);
+
+    deck = [];
+
+    let handPos = 0;
+    hand = [];
+
+    let boardPos = 0;
+    board = [];
+
+    discard = [];
+
+    playerHealth = [];
+
+    opDeck = [];
+
+    let opHandPos = 0;
+    opHand = [];
+
+    let opBoardPos = 0;
+    opBoard = []; 
+
+    opDiscard = [];
+
+    opHealth = [];
+
+    for (let card of myCards) {
+        if (card.st_name === "Hand") {
+            hand.push(new Card(card.dk_id,card.crd_name, card.crd_atk, card.dk_crd_hp, card.crd_cost, card.st_name, false, HANDX + CARDSPACE * handPos, HANDY, false));
+            handPos++;
+        } else if(card.st_name === "Deck") {
+            deck.push(new Card(card.dk_id, card.crd_name, card.crd_atk, card.dk_crd_hp, card.crd_cost, card.st_name, false, DECKX, DECKY, false));
+        }else if(card.st_name === "Board") {
+            board.push(new Card(card.dk_id, card.crd_name, card.crd_atk, card.dk_crd_hp, card.crd_cost, card.st_name, false, BOARDX + CARDSPACE * boardPos, BOARDY, false));
+            boardPos++
+        }else if(card.st_name === "Life"){
+            playerHealth.push(new Card(card.dk_id, card.crd_name, card.crd_atk, card.dk_crd_hp, card.crd_cost, card.st_name, false, HEATLHX, HEATLHY, false));
+        }else{
+            discard.push(new Card(card.dk_id, card.crd_name, card.crd_atk, card.dk_crd_hp, card.crd_cost, card.st_name, false, DISCARDX, DISCARDY, false));
+        }
+    }
+    for (let card of opCards) {
+        if (card.st_name === "Hand"){
+            opHand.push(new Card(card.dk_id, card.crd_name, card.crd_atk, card.dk_crd_hp, card.crd_cost, card.st_name, false, OPHANDX + CARDSPACE * opHandPos, OPHANDY, true));
+            opHandPos++;
+        }else if (card.st_name === "Board"){
+            opBoard.push(new Card(card.dk_id, card.crd_name, card.crd_atk, card.dk_crd_hp, card.crd_cost, card.st_name, false, OPBOARDX + CARDSPACE * opBoardPos, OPBOARDY, false));
+            opBoardPos++;
+        }else if (card.st_name === "Deck"){
+            opDeck.push(new Card(card.dk_id, card.crd_name, card.crd_atk, card.dk_crd_hp, card.crd_cost, card.st_name, false, OPDECKX, OPDECKY, true));
+        }else if (card.st_name === "Life"){ 
+            opHealth.push(new Card(card.dk_id, card.crd_name, card.crd_atk, card.crd_hp, card.crd_cost, card.st_name, false, OPHEALTHX, OPHEALTHY, true));
+           
+        }else {
+            opDiscard.push(new Card(card.dk_id, card.crd_name, card.crd_atk, card.dk_crd_hp, card.crd_cost, card.st_name, false, OPDISCARDX, OPDISCARDY, true));
+        }
+        
        
     }
-    
-    for (i = 0; i < cards.length; i++){
-        if (cardSelected == true) {
-            placeX = 300;
-            placeTypeX = 300;
-            placeY = 100;
-            rect(placeX, placeY, cards[i].width, cards[i].height);
-                if (cards[i].cardType == 1) {
-                    text("Card is played", 100, 100)
-                    text(cards[i].cardName, placeX, placeY + 40)
-                    text("Card attack: " + cards[i].cardAtk, placeX, placeY + 160)
-                    text("Card strike: " + cards[i].cardStk, placeX, placeY + 180)
-                    text("Card health: " + cards[i].cardHealth, placeX, placeY + 200)
-                    text("Cost: " + cards[i].cardCost, placeX + 100, placeY + 20)
-        
-        
-                } else if (cards[i].cardType == 2) {
-                    text("Card is played", 100, 100)
-                    text(cards[i].cardName, placeX, placeY + 40)
-                    text("Card health: " + cards[i].cardHealth, placeX, placeY + 200)
-                    text("Card attack: " + cards[i].cardAtk, placeX, placeY + 180)
-                    text("Cost: " + cards[i].cardCost, placeX + 100, placeY + 20)
-    
-        
-                } else {
-                    text("Card is played", 100, 100)
-                    text(cards[i].cardName, placeX, placeY + 40)
-                    text("Cost: " + cards[i].cardCost, placeX + 100, placeY + 20)
-                    
-        
-                }
-                placeX += cards[i].width * 1.25
-                break
-                
-        }else{
-                
-                rect(placeX, placeY, cards[i].width, cards[i].height);
-                if (cards[i].cardType == 1) {
-                    
-                    text(cards[i].cardName, placeX, placeY + 40)
-                    text("Card attack: " + cards[i].cardAtk, placeX, placeY + 160)
-                    text("Card strike: " + cards[i].cardStk, placeX, placeY + 180)
-                    text("Card health: " + cards[i].cardHealth, placeX, placeY + 200)
-                    text("Cost: " + cards[i].cardCost, placeX + 100, placeY + 20)
-        
-                } else if (cards[i].cardType == 2) {
-                    text(cards[i].cardName, placeX, placeY + 40)
-                    text("Card health: " + cards[i].cardHealth, placeX, placeY + 200)
-                    text("Card attack: " + cards[i].cardAtk, placeX, placeY + 180)
-                    text("Cost: " + cards[i].cardCost, placeX + 100, placeY + 20)
-        
-                } else {
-                    text(cards[i].cardName, placeX, placeY + 40)
-                    text("Cost: " + cards[i].cardCost, placeX + 100, placeY + 20)
-        
-                }
-        
-                placeX += cards[i].width * 1.25
-                
-            }
-    }
-    placeX = 600;
-    placeTypeX = 600;
-    placeY = 800;
-    
-   
-    line(1, 40, windowWidth, 40);
 }
 
-function leaveGame() {
-    if (confirm("Are you sure you want to forfeit?")) {
-        window.location = "index.html"
-    }
+function draw() {
+    noStroke();
+    scoreBoard.draw();
+//  -------------- player side -----------------    
+    for (let card of deck) card.draw();
+    for (let card of board) card.draw();
+    for (let card of hand) card.draw();
+    for (let card of discard) card.draw();
+    for (let card of playerHealth) card.draw();
+
+//  -------------- opponent side ---------------    
+    for (let card of opHand) card.draw();
+    for (let card of opDeck) card.draw();
+    for (let card of opBoard) card.draw();
+    for (let card of opDiscard) card.draw();
+    for (let card of opHealth) card.draw();
+
+// ---------------- buttons --------------------    
+    for (let button of buttons) button.draw();
+
 }
 
-async function mousePressed() {
-    for (let i = 0; i < cards.length; i++) {
-        if ((mouseX > placeX) && (mouseX < placeX + cards[i].width) & (mouseY > placeY) && (mouseY < placeY + cards[i].height)) {
-            console.log("Card selected " + cards[i].cardId)
-            try{
-                let result = await requestCardInfo(i + 1);
-                if (result) { 
-                    cardSelected = true 
-                    console.log(cardSelected)
-                }
-                break;
-            }catch(err){
-                console.log(err)
-            }
-        }
-        placeX += cards[i].width * 1.25;
-    }
+function mouseClicked() {
+    let card;
     
-}
-function attackCard() {
-   
+    card = returnSelected(deck);
+    if (card) card.clicked(mouseX, mouseY)
+    else for (let card of deck) card.clicked(mouseX, mouseY);
+
+    card = returnSelected(board);
+    if (card) card.clicked(mouseX, mouseY);
+    else for (let card of board) card.clicked(mouseX, mouseY);
+    
+    card = returnSelected(hand);
+    if (card) card.clicked(mouseX, mouseY);
+    else for (let card of hand) card.clicked(mouseX, mouseY);
+    
+    card = returnSelected(opBoard);
+    if (card) card.clicked(mouseX, mouseY);
+    else for (let card of opBoard) card.clicked(mouseX, mouseY);
+
+    setCardsState();
+    refreshButtons();
+    for (let button of buttons) button.clicked(mouseX,mouseY);
 }
 
+function returnSelected(cardList) {
+    for(let card of cardList) {
+        if (card.isSelected()) return card;
+    }
+    return null;
+}

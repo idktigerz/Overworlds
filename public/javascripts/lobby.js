@@ -1,25 +1,11 @@
-/* window.onload = async function() {
-    let userInfo = await getUserInfo();
-    document.getElementById("username").innerHTML = userInfo.user_username;   
-} */
+let bg;
 
-/* function createRooms(){
-    let result = await createRoom();
+function setup(){
+    bg = loadImage('images/background.png');
+    createCanvas(1000, 1000);
 
-} */
+}
 
-
-async function selectPlayer(playerId){
-    console.log(playerId);
-    try {
-        let result = await requestPlayerInfo(playerId);
-        if (result.success) {
-            sessionStorage.setItem("playerId", playerId);
-            window.location = "game.html"
-        } else {
-            document.getElementById("result").innerHTML = "Cannot join game";
-        }
-    } catch (err) {
-        console.log(err);
-    }
+function draw(){
+    background(bg);
 }
