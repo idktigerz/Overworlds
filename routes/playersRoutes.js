@@ -46,6 +46,13 @@ router.get('/playermatches/waiting', async function(req, res, next) {
   res.status(result.status).send(result.result);
 });
 
+router.put('/playermatches/:id/deck', async function(req, res, next) {
+  console.log("Get cards from deck");
+  let pmId = req.params.id;
+  let result = await pModel.getCardFromDeck(pmId);
+  res.status(result.status).send(result.result);
+});
+
 router.get('/playermatches/:id', async function(req, res, next) {
   console.log("Get match info for player ");
   let pmId = req.params.id;

@@ -3,6 +3,7 @@ setInterval(checkOpponent,1000);
 async function checkOpponent() {
     try {
         let playerId = sessionStorage.getItem("playerId");
+        console.log(playerId);
         let pId = sessionStorage.getItem("pId");
         let mId = sessionStorage.getItem("mId");
         let opponent = await requestOpponentInfo(playerId,pId,mId);

@@ -53,6 +53,24 @@ async function requestPlayerMatchDeck(pId,pmId) {
     }
 }
 
+async function requestCardfromDeck(pmId){
+    try {
+        const response = await fetch(`/api/players/playermatches/${pmId}/deck`, 
+        {
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+          method: "PUT",
+        });
+        var result = await response.json();
+        // We are not checking for errors (considering the GUI is only allowing correct choices)
+        return result;
+    } catch (err) {
+        console.log(err)
+    }
+}
+
 async function requestPlayerMatchInfo(id) {
     try {
         const response = await fetch(`/api/players/playermatches/${id}`);

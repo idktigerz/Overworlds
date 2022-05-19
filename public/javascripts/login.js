@@ -6,6 +6,7 @@ async function login() {
         if (!player.usr_id) {
             alert(player.msg);
         } else {
+            sessionStorage.setItem("playerId", player.usr_id)
             let matches = await requestPlayerMatches(player.usr_id);
             if (matches.length == 0) {
                 alert("That player has no matches");

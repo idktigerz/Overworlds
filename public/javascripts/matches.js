@@ -2,6 +2,7 @@ let pId;
 
 window.onload = async function() {
     pId = sessionStorage.getItem("playerId");
+    console.log(pId)
     try {
         let matches = await requestWaitingMatches();
         let html = "";

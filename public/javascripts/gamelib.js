@@ -2,10 +2,11 @@ var playerId;
 var scoreBoard;
 var gameOver;
 
+var getCardsButton = new Button("Get cards", 700, 350, getCards);
 var attackButton = new Button("Attack", 700, 350, attack);
 var playButton = new Button("Play card", 750, 350, play);
 var endTurnButton = new Button("End turn", 800, 350, end);
-var buttons = [ attackButton, playButton, endTurnButton ];
+var buttons = [ getCardsButton, attackButton, playButton, endTurnButton ];
 
 
 var startingTurn = false;
@@ -54,7 +55,7 @@ const OPHEALTHY = 50;
 
 async function refresh() {
     if (scoreBoard && 
-        (scoreBoard.getPlayerState() == "Setup" ||
+        (scoreBoard.getPlayerState() == "Setup" || scoreBoard.getPlayerState() == "Draw" ||
         scoreBoard.getPlayerState() == "Battle")) {
             await loadScoreBoard();
             await loadCards();
@@ -75,6 +76,13 @@ async function play() {
     let card = returnSelected(hand);
     await requestPlay(playerId,playerMatchId,card.getId());
     await loadScoreBoard();
+    await loadCards();
+    setCardsState();
+    refreshButtons();
+}
+
+async function getCards(){
+    await requestCardfromDeck(playerMatchId);
     await loadCards();
     setCardsState();
     refreshButtons();
@@ -111,7 +119,7 @@ async function loadScoreBoard() {
     let p2 = await requestPlayerMatchInfo(opponentMatchId);
     playerId = p1.usr_id;
     gameOver = p1.mtc_finished;
-    scoreBoard = new ScoreBoard(p1.usr_name, p2.usr_name, p1.pm_hp, p2.pm_hp, p1.pm_mana, p2.pm_mana, p1.pm_st_name, p2.pm_st_name, p1.mtc_turn);
+    scoreBoard = new ScoreBoard(p1.usr_name, p2.usr_name, p1.pm_hp, p2.pm_hp, p1.pm_mana, p2.pm_mana, p1.pms_name, p2.pms_name, p1.mtc_turn);
 }
 
 function preload() {
@@ -134,7 +142,13 @@ function refreshButtons() {
         button.hide();
         button.disable();
     }
-    if (scoreBoard.getPlayerState() === "Setup") {
+    if (scoreBoard.getPlayerState() === "Draw"){
+        getCardsButton.show();
+        getCardsButton.enable();
+        endTurnButton.show();
+        endTurnButton.enable();
+    }
+    else if (scoreBoard.getPlayerState() === "Setup") {
         playButton.show();
         if (returnSelected(hand)) playButton.enable();
     } else if (scoreBoard.getPlayerState() === "Battle") {
@@ -165,7 +179,9 @@ function setCardsState() {
     for (let card of opDeck) card.disable();
     for (let card of opBoard) card.disable();
 
-    if (scoreBoard.getPlayerState() === "Setup") {
+    if (scoreBoard.getPlayerState() === "Draw"){
+        for (let card of deck) card.enable();
+    }else if (scoreBoard.getPlayerState() === "Setup") {
         for (let card of hand) card.enable();
     } else if (scoreBoard.getPlayerState() === "Battle") {
         for (let card of board) 
