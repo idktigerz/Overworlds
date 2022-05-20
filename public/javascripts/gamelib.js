@@ -38,7 +38,7 @@ const OPDECKX = 1000;
 const OPDECKY = 50;
 
 var opHand = [];
-const OPHANDX = 400;
+const OPHANDX = 300;
 const OPHANDY = 1;
 
 var opBoard = [];
@@ -131,9 +131,10 @@ async function setup() {
     let canvas = createCanvas(windowWidth, windowHeight);
     canvas.parent('game');
     await loadScoreBoard();
+    await loadCards()
     setCardsState();
     refreshButtons();
-    setInterval(refresh,1000);
+    //setInterval(refresh,1000);
     loop();
 }
 

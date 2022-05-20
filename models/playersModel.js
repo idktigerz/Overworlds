@@ -44,6 +44,7 @@ module.exports.getOpponent = async function (pmId, matchId) {
         return { status: 500, result: err };
     }
 }
+const NCARDS = 5
 
 module.exports.getCardFromDeck = async function (pmId) {
     try {
@@ -51,29 +52,27 @@ module.exports.getCardFromDeck = async function (pmId) {
         if (res.status != 200) return res;
         let player = res.result;
         if (player.mtc_turn == 1) {
-            for(let i=0; i < 5; i++) {
+            for(let i=0; i < NCARDS; i++) {
                 let sql = `select dk_id from deck where dk_st_id = 1 and dk_pm_id = $1
                        order by random()
                        LIMIT 1`;
-                let res = await pool.query(sql, pmId);
+                let res = await pool.query(sql, [pmId]);
                 let cardId = res.rows[0].dk_id;
                 sql = `update deck set dk_st_id = 2 where dk_pm_id = $1 and dk_id = $2 returning *`;         
                 await pool.query(sql,[pmId,cardId]);
-                return { status: 200, result: {msg: "Succesufully got cards from deck"}}
             }
         }else{
             for(let i=0; i < 1; i++) {
-                let sql = `select dk_id from deck where dk_st_id = 1 
+                let sql = `select dk_id from deck where dk_st_id = 1 and dk_pm_id = $1
                        order by random()
                        LIMIT 1`;
-                let res = await pool.query(sql);
+                let res = await pool.query(sql, [pmId]);
                 let cardId = res.rows[0].dk_id;
                 sql = `update deck set dk_st_id = 2 where dk_pm_id = $1 and dk_id = $2 returning *`;         
                 await pool.query(sql,[pmId,cardId]);
-                return { status: 200, result: {msg: "Succesufully got cards from deck"}}
             }
         }
-        
+        return { status: 200, result: {msg: "Succesufully got cards from deck"}}
     } catch (err) {
         console.log(err);
         return { status: 500, result: err };
@@ -111,7 +110,7 @@ module.exports.attackPlayer = async function (pmId, deckId) {
         res = await this.getPlayerDeckCard(pmId,deckId)
         if (res.status != 200) return res;
         let card = res.result;
-        if (card.deck_pos_id != 2)
+        if (card.deck_st_id != 2)
             return { status: 400, result: { msg: "The card cannot attack at this moment" } };
         // get opponent info
         let matchId = player.pm_match_id;
@@ -128,8 +127,8 @@ module.exports.attackPlayer = async function (pmId, deckId) {
         if (resCheckOpDeck.rows.length != 0)
             return {status: 400, result: {msg: "Cannot attack opponent, some cards still have HP left"}}; 
         // Mark the card has "TablePlayed"
-        let sqlUpPos = `update deck set deck_st_id = 3
-                        where deck_id = $1`
+        let sqlUpPos = `update deck set dk_st_id = 3
+                        where dk_id = $1`
         await pool.query(sqlUpPos, [deckId]);
         // remove 1 from opponent life
         let sqlUpHp = `update player_match set pm_hp = pm_hp - 1
@@ -138,7 +137,7 @@ module.exports.attackPlayer = async function (pmId, deckId) {
         //add code for the health 
         if (sqlUpHp.result.rows > 0){
             let sqlGetRandCard = `select dk_id from deck where dk_st_id = 5 
-                                    ORDER BY RAND() limit 1`;
+                                    ORDER BY RANDOM() limit 1`;
             let resGetRandCard = await pool.query(sqlGetRandCard);
             let randCard = resGetRandCard.rows[0].dk_id;
             let sqlUpdate = `update deck set dk_st_id = 2 where dk_id = $1`
@@ -206,7 +205,7 @@ module.exports.endTurn = async function (pmId) {
         res = await this.getPlayerMatch(pmId);
         if (res.status != 200) return res;
         let player = res.result;
-        if (player.pm_state_id != 2)
+        if (player.pm_state_id == 4 )
             return { status: 400, result: { msg: "You cannot end turn at this moment" } };
 
         // get opponent info
@@ -247,7 +246,7 @@ module.exports.endTurn = async function (pmId) {
         }
         // get a new card for the next player playing (the opponent)
         // get random card value
-        let sqlRandCard = `Select dk_id from card 
+        let sqlRandCard = `Select dk_id from deck
                            where dk_st_id = 1                    
                            order by RANDOM() 
                            LIMIT 1`;
@@ -490,11 +489,12 @@ module.exports.createMatch = async function (pId) {
             let matchId = res.rows[0].mtc_id;
             // player starts first
             sql = `insert into player_match (pm_player_id, pm_match_id, pm_state_id, pm_hp, pm_mana) 
-               values ($1, $2, 1, 10, 1) returning *`;         
+               values ($1, $2, 2, 10, 1) returning *`;         
             res = await pool.query(sql,[pId, matchId]);
             let pmId = res.rows[0].pm_id;
             // Create 3 random cards (with repetition)
             this.createRandomCards(pmId, 44);
+            this.getCardFromDeck(pmId, 5)
             return { status: 200, result: 
                 {msg: "Match successfully created.", matchId: matchId, pmId: pmId} };
         }
@@ -530,6 +530,7 @@ module.exports.joinMatch = async function (pId,mId) {
         let pmId = res.rows[0].pm_id;
         // Create 2 random cards, you will draw one later
         this.createRandomCards(pmId, 44);
+        this.getCardFromDeck(pmId, 5)
         return { status: 200, result: {msg: "You successfully joined the match",
                                         pmId: pmId, oId: oId} };
     } catch (err) {
