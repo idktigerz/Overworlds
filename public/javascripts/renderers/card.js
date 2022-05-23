@@ -19,8 +19,9 @@ class Card {
     draw() {
         if (this.selected) {
             fill(100, 200, 100);
+            
         } else if (this.attacked) {
-            fill(200, 100, 100)
+            fill(200, 100, 100);
         } else {
             fill(255, 255, 255);
         }

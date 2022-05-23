@@ -10,3 +10,7 @@ module.exports.getCards = async function () {
         return { status: 500, result: err };
     }
 }
+
+module.exports.getCardByID = async function(deckId){
+    
+}

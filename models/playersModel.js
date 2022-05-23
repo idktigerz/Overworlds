@@ -223,7 +223,9 @@ module.exports.endTurn = async function (pmId) {
             await pool.query(sqlUpState, [2, pmId]);
             // change state of opponent to PlayCard
             await pool.query(sqlUpState, [2, opponent.pm_id]);
-        } else if (opponent.pm_state_id == 4) { // if both have ended the turn 
+        } else if (opponent.pm_state_id == 2) {
+            await pool.query(sqlUpState, [3, pmId]);
+        }else if (opponent.pm_state_id == 3) { // if both have ended the turn 
             // delete all cards that died from both players in the match
             // Cards on the hand have full HP so no need to check the card position
             let sqlDeck = `update deck set dk_st_id = 4
@@ -233,7 +235,6 @@ module.exports.endTurn = async function (pmId) {
             // change state of player to Wait (opponent will go first this time)
             await pool.query(sqlUpState, [4, pmId]);
             // change state of opponent to PlayCard
-            await pool.query(sqlUpState, [3, opponent.pm_id]);
         } else {
             return { status: 500, result: { msg: "Current state of the players in the match is not valid" } }
         }

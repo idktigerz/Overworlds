@@ -3,9 +3,9 @@ var scoreBoard;
 var gameOver;
 
 var getCardsButton = new Button("Get cards", 700, 350, getCards);
-var attackButton = new Button("Attack", 700, 350, attack);
-var playButton = new Button("Play card", 750, 350, play);
-var endTurnButton = new Button("End turn", 800, 350, end);
+var attackButton = new Button("Attack", 900, 350, attack);
+var playButton = new Button("Play card", 1000, 350, play);
+var endTurnButton = new Button("End turn", 1200, 350, end);
 var buttons = [ getCardsButton, attackButton, playButton, endTurnButton ];
 
 
@@ -152,6 +152,8 @@ function refreshButtons() {
     else if (scoreBoard.getPlayerState() === "Setup") {
         playButton.show();
         if (returnSelected(hand)) playButton.enable();
+        endTurnButton.show();
+        endTurnButton.enable();
     } else if (scoreBoard.getPlayerState() === "Battle") {
         attackButton.show();
         endTurnButton.show();
