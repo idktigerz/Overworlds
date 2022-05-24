@@ -159,13 +159,13 @@ module.exports.attackCard = async function (pmId, deckId, opDeckId) {
         res = await this.getPlayerMatch(pmId);
         if (res.status != 200) return res;
         let player = res.result;
-        if (player.pm_state_id != 2)
+        if (player.pm_state_id != 3)
             return { status: 400, result: { msg: "You cannot attach at this moment" } };
         // get player deck card info
         res = await this.getPlayerDeckCard(pmId,deckId)
         if (res.status != 200) return res;
         let card = res.result;
-        if (card.deck_pos_id != 2)
+        if (card.dk_st_id != 3)
             return { status: 400, result: { msg: "The card cannot attack at this moment" } };
         // get opponent info
         let matchId = player.pm_match_id;
@@ -174,7 +174,7 @@ module.exports.attackCard = async function (pmId, deckId, opDeckId) {
         let opponent = res.result;
         let opPmId = opponent.pm_id;
         
-        res = await this.getPlayerDeckCard(opPmId, opDeckId,"opponent");
+        res = await this.getPlayerDeckCard(opPmId, opDeckId, "opponent");
         if (res.status != 200) return res;
         let opCard = res.result;     
         if ((opCard.dk_st_id != 3) || opCard.dk_hp <= 0)
@@ -182,16 +182,16 @@ module.exports.attackCard = async function (pmId, deckId, opDeckId) {
 
         // Now everything is ok. Lets make the attack
         // Mark the card has "TablePlayed"
-        let sqlUpPos = `update dk set dk_st_id = 3
-                        where dk_id = $1`
-        await pool.query(sqlUpPos, [deckId]);
 
         let sqlBattle = `select dk_crd_hp, crd_atk from deck, cards 
                       where dk_id = $1 and dk_id = $2`
         await pool.query(sqlBattle, [card.dk_crd_id, opCard.dk_crd_id]);
-        let sqlWin = `update deck set dk_crd_hp = dk_crd_hp - 1
-                      where dk_id = $1 and dk_id = $2`
-        await pool.query(sqlWin, [deckId ,opDeckId]);
+        let sqlDamage = `update deck set dk_crd_hp = dk_crd_hp - 1
+                      where dk_id = $1`
+        await pool.query(sqlDamage, [opDeckId]);
+
+        return {status: 200, result:{msg: "Card attacked"}};
+
     } catch (err) {
         console.log(err);
         return { status: 500, result: err };
@@ -224,7 +224,16 @@ module.exports.endTurn = async function (pmId) {
             // change state of opponent to PlayCard
             await pool.query(sqlUpState, [2, opponent.pm_id]);
         } else if (opponent.pm_state_id == 2) {
-            await pool.query(sqlUpState, [3, pmId]);
+            let randPlayer =  Math.floor(Math.random());
+            
+            if (randPlayer == 1){
+                await pool.query(sqlUpState, [3, pmId]);
+                await pool.query(sqlUpState, [4, opponent.pm_id]);
+            }else if (randPlayer == 0){
+                await pool.query(sqlUpState, [4, pmId]);
+                await pool.query(sqlUpState, [3, opponent.pm_id]);
+            }
+            console.log(randPlayer)
         }else if (opponent.pm_state_id == 3) { // if both have ended the turn 
             // delete all cards that died from both players in the match
             // Cards on the hand have full HP so no need to check the card position
