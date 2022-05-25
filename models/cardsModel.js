@@ -1,4 +1,4 @@
-pool = require('./connection.js')
+const pool = require('./connection.js');
 
 module.exports.getCards = async function () {
     try {
@@ -12,5 +12,12 @@ module.exports.getCards = async function () {
 }
 
 module.exports.getCardByID = async function(deckId){
-    
+    try {
+        let deckSql = `select * from cards where crd_id = (select dk_crd_id from deck where dk_id = $1)`
+        let card = await pool.query(deckSql, [deckId]);
+        return { status: 200, result: card};
+    } catch (err) {
+        console.log(err);
+        return { status: 500, result: err}
+    }
 }

@@ -74,11 +74,13 @@ async function refresh() {
 
 async function play() {
     let card = returnSelected(hand);
-    await requestPlay(playerId,playerMatchId,card.getId());
+    let res = await requestPlay(playerId,playerMatchId,card.getId());
+    alert(res.msg);
     await loadScoreBoard();
     await loadCards();
     setCardsState();
     refreshButtons();
+    refresh();
 }
 
 async function getCards(){

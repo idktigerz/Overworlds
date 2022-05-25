@@ -1,5 +1,6 @@
 const res = require('express/lib/response');
-var pool = require('./connection.js')
+var pool = require('./connection.js');
+var cModel = require('./cardsModel.js');
 
 module.exports.getMatchOfPlayer = async function (pmId) {
     try {
@@ -224,7 +225,7 @@ module.exports.endTurn = async function (pmId) {
             // change state of opponent to PlayCard
             await pool.query(sqlUpState, [2, opponent.pm_id]);
         } else if (opponent.pm_state_id == 2) {
-            let randPlayer =  Math.floor(Math.random());
+            let randPlayer =  Math.floor(Math.random() * 2);
             
             if (randPlayer == 1){
                 await pool.query(sqlUpState, [3, pmId]);
@@ -233,10 +234,7 @@ module.exports.endTurn = async function (pmId) {
                 await pool.query(sqlUpState, [4, pmId]);
                 await pool.query(sqlUpState, [3, opponent.pm_id]);
             }
-            console.log(randPlayer)
-        }else if (opponent.pm_state_id == 3) { // if both have ended the turn 
-            // delete all cards that died from both players in the match
-            // Cards on the hand have full HP so no need to check the card position
+        }else if (opponent.pm_state_id == 3) {
             let sqlDeck = `update deck set dk_st_id = 4
                            where (dk_pm_id = $1 or dk_pm_id = $2)  
                            and dk_crd_hp <= 0`;
@@ -253,6 +251,7 @@ module.exports.endTurn = async function (pmId) {
                           Where mtc_id = $1`;
             await pool.query(sqlEnd, [matchId]);
             return { status: 200, result: { msg: "Game Ended" } };
+
         }
         // get a new card for the next player playing (the opponent)
         // get random card value
@@ -286,13 +285,22 @@ module.exports.playCard = async function (pmId, deckId) {
         res =  await this.getPlayerDeckCard(pmId,deckId);
         if (res.status != 200) return res;
         let playerCard = res.result;
-        if (playerCard.dk_st_id != 2)
+        if (playerCard.dk_st_id != 2){
             return {status:400, result: {msg:"That card is not on the hand to be played"}};
+        }
+        let result = await cModel.getCardByID(deckId);
+        /* let deckSql = `select * from cards INNER JOIN deck ON dk_crd_id = crd_id where dk_id = $1 `;
+        let result = await pool.query(deckSql, [deckId]) */
+        let card = result.result.rows[0];
+        if(player.pm_mana < card.crd_cost) {
+            return {status:400, result: {msg:"You do not have enough mana to playe the card"}};
+        }
         let sqlUpCard = `update deck set dk_st_id = 3
                          where dk_id = $1`;
         await pool.query(sqlUpCard, [deckId]);
-
-        return {status:200, result:{msg:"Card was successfully played on the table"}}
+        let sqlUpMana = `update player_match set pm_mana = $1 - $2 where pm_id = $3`;
+        await pool.query(sqlUpMana, [player.pm_mana, card.crd_cost, pmId])
+        return { status:200, result: {msg:"Card was successfully played on the table"} }
     } catch (err) {
         console.log(err);
         return { status: 500, result: err };

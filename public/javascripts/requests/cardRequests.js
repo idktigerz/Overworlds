@@ -8,3 +8,13 @@ async function requestCardsInfo() {
         console.log(err);
     }
 }
+
+async function requestCardInfoById(deckId){
+    try {
+        const response = await fetch(`/api/cards/${deckId}`)
+        var card = await response.json();
+        return card;
+    } catch (err) {
+        console.log(err);
+    }
+}
