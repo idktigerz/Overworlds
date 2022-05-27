@@ -4,7 +4,7 @@ const POSX = 1300;
 const POSY = 10;
 
 class ScoreBoard {
-    constructor(playerName, opponentName,playerHP, opponentHP, playerMana, opponentMana, playerState, opponentState, matchTurn ) {
+    constructor(playerName, opponentName,playerHP, opponentHP, playerMana, opponentMana, playerState, opponentState, matchTurn, hasPlayed, opHasPlayed) {
         this.pName = playerName;
         this.oName = opponentName;
         this.pHP = playerHP;
@@ -14,6 +14,8 @@ class ScoreBoard {
         this.pState = playerState;
         this.oState = opponentState;
         this.mTurn = matchTurn;
+        this.hasPlayed = hasPlayed;
+        this.opHasPlayed = opHasPlayed; 
     }
 
     getPlayerState() {
@@ -23,7 +25,10 @@ class ScoreBoard {
         return this.pState;
     }
 
+    getPlayerHasPlayed(){
 
+    }
+    
     draw() {
         fill(100,200,100);
         stroke(0,0,0);
@@ -42,13 +47,15 @@ class ScoreBoard {
   
     }
 
-    updateScore(playerHP, opponentHP, playerMana, opponentMana, playerState, opponentState, matchTurn) {
+    updateScore(playerHP, opponentHP, playerMana, opponentMana, playerState, opponentState, matchTurn, hasPlayed, opHasPlayed) {
         this.pHP = playerHP;
         this.oHP = opponentHP;
         this.pMana = playerMana;
         this.oMana = opponentMana; 
         this.pState = playerState;
         this.oState = opponentState;
-        this.mTurn = matchTurn;           
+        this.mTurn = matchTurn;   
+        this.hasPlayed = hasPlayed;
+        this.opHasPlayed = opHasPlayed;        
     }
 }

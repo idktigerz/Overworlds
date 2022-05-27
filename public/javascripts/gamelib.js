@@ -121,7 +121,7 @@ async function loadScoreBoard() {
     let p2 = await requestPlayerMatchInfo(opponentMatchId);
     playerId = p1.usr_id;
     gameOver = p1.mtc_finished;
-    scoreBoard = new ScoreBoard(p1.usr_name, p2.usr_name, p1.pm_hp, p2.pm_hp, p1.pm_mana, p2.pm_mana, p1.pms_name, p2.pms_name, p1.mtc_turn);
+    scoreBoard = new ScoreBoard(p1.usr_name, p2.usr_name, p1.pm_hp, p2.pm_hp, p1.pm_mana, p2.pm_mana, p1.pms_name, p2.pms_name, p1.mtc_turn, p1.pm_played, p2.pm_played);
 }
 
 function preload() {

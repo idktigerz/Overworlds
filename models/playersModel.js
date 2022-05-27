@@ -104,7 +104,7 @@ module.exports.attackPlayer = async function (pmId, deckId) {
         if (res.status != 200) return res;
         
         let player = res.result;
-        if (player.pm_state_id != 2)
+        if (player.pm_state_id != 2 || player.pm_played == true)
             return { status: 400, result: { msg: "You cannot attack at this moment" } };
         
         // get player deck card info
@@ -160,8 +160,9 @@ module.exports.attackCard = async function (pmId, deckId, opDeckId) {
         res = await this.getPlayerMatch(pmId);
         if (res.status != 200) return res;
         let player = res.result;
-        if (player.pm_state_id != 3)
-            return { status: 400, result: { msg: "You cannot attach at this moment" } };
+        if (player.pm_state_id != 3 || player.pm_played == true){
+            return { status: 400, result: { msg: "You cannot attack at this moment" } };
+        } 
         // get player deck card info
         res = await this.getPlayerDeckCard(pmId,deckId)
         if (res.status != 200) return res;
@@ -190,7 +191,8 @@ module.exports.attackCard = async function (pmId, deckId, opDeckId) {
         let sqlDamage = `update deck set dk_crd_hp = dk_crd_hp - 1
                       where dk_id = $1`
         await pool.query(sqlDamage, [opDeckId]);
-
+        let sqlUpPlayed = `update player_match set pm_played = true where pm_id = $1`;
+        await pool.query(sqlUpPlayed, [pmId])
         return {status: 200, result:{msg: "Card attacked"}};
 
     } catch (err) {
@@ -234,13 +236,10 @@ module.exports.endTurn = async function (pmId) {
                 await pool.query(sqlUpState, [4, pmId]);
                 await pool.query(sqlUpState, [3, opponent.pm_id]);
             }
-        }else if (opponent.pm_state_id == 3) {
-            let sqlDeck = `update deck set dk_st_id = 4
-                           where (dk_pm_id = $1 or dk_pm_id = $2)  
-                           and dk_crd_hp <= 0`;
-            await pool.query(sqlDeck, [pmId, opponent.pm_id]);
+        }else if (opponent.pm_state_id == 4) {
             // change state of player to Wait (opponent will go first this time)
             await pool.query(sqlUpState, [4, pmId]);
+            await pool.query(sqlUpState, [3, opponent.pm_id]);
             // change state of opponent to PlayCard
         } else {
             return { status: 500, result: { msg: "Current state of the players in the match is not valid" } }
@@ -255,6 +254,14 @@ module.exports.endTurn = async function (pmId) {
         }
         // get a new card for the next player playing (the opponent)
         // get random card value
+        if (opponent.pm_st_id == 4 && opponent.pm_played == true){
+            await pool.query(sqlUpState, [2, pmId]);
+            await pool.query(sqlUpState, [2, opponent.pm_id]);
+            let sqlUpPlayed = `update player_match set pm_played = false where pm_id = $1 and pm_id = $2`;
+            await pool.query(sqlUpPlayed, [pmId, opponent.pm_id]);
+        }else{
+            return { status: 500, result: {msg: "Cannot end turn"}}
+        }
         let sqlRandCard = `Select dk_id from deck
                            where dk_st_id = 1                    
                            order by RANDOM() 
@@ -263,10 +270,13 @@ module.exports.endTurn = async function (pmId) {
         let cardId = resRandCard.rows[0].dk_id;
         // insert card in the opponent deck (hand, random type, 4 hp)
         let sqlUpdatePlayerHand = `update deck set dk_st_id = 2 where dk_id = $1 and pm_state_id = 2`;
-        await pool.query(sqlUpdatePlayerHand, [player.pm_id, cardId]);
-        let sqlUpdateOpHand = `update deck set dk_st_id = 2 where dk_id = $1 pm_state_id = 2`;
-        await pool.query(sqlUpdateOpHand, [opponent.pm_id, cardId]);
-
+        await pool.query(sqlUpdatePlayerHand, [cardId, player.pm_id]);
+        let sqlUpdateOpHand = `update deck set dk_st_id = 2 where dk_id = $1 and pm_state_id = 2`;
+        await pool.query(sqlUpdateOpHand, [cardId, opponent.pm_id]);
+        let sqlDeck = `update deck set dk_st_id = 4
+                           where (dk_pm_id = $1 or dk_pm_id = $2)  
+                           and dk_crd_hp <= 0`;
+        await pool.query(sqlDeck, [pmId, opponent.pm_id]);
         return { status: 200, result: { msg: "Turn ended" } };
     } catch (err) {
         console.log(err);
@@ -279,7 +289,7 @@ module.exports.playCard = async function (pmId, deckId) {
         let res = await this.getPlayerMatchInfo(pmId);
         if (res.status != 200) return res;
         let player = res.result;
-        if (player.pm_state_id != 2 ) 
+        if (player.pm_state_id != 2) 
             return {status:400, result: {msg:"Cannot play a card at this moment"}};        
         
         res =  await this.getPlayerDeckCard(pmId,deckId);
@@ -298,8 +308,8 @@ module.exports.playCard = async function (pmId, deckId) {
         let sqlUpCard = `update deck set dk_st_id = 3
                          where dk_id = $1`;
         await pool.query(sqlUpCard, [deckId]);
-        let sqlUpMana = `update player_match set pm_mana = $1 - $2 where pm_id = $3`;
-        await pool.query(sqlUpMana, [player.pm_mana, card.crd_cost, pmId])
+        let sqlUpMana = `update player_match set pm_mana = ($1 - $2) where pm_id = $3`;
+        await pool.query(sqlUpMana, [player.pm_mana, card.crd_cost, pmId]);
         return { status:200, result: {msg:"Card was successfully played on the table"} }
     } catch (err) {
         console.log(err);
@@ -354,7 +364,7 @@ module.exports.getPlayerDeck = async function (pId,pmId) {
 
 module.exports.getPlayerMatchInfo = async function (pmId) { 
     try {
-        let sql = `	select pm_id, pm_state_id, pm_hp, pm_mana, pms_name, mtc_turn, mtc_finished, usr_name, usr_id  
+        let sql = `	select pm_id, pm_state_id, pm_hp, pm_mana, pm_played, pms_name, mtc_turn, mtc_finished, usr_name, usr_id  
         from player_match, pm_state, matches, users  
         where 
           pm_player_id = usr_id and
@@ -447,8 +457,8 @@ module.exports.getPlayersAndMatchesWaiting =  async function (pId) {
         let sql = `select mtc_id, pm_id, usr_name from player_match, matches, users
                    where pm_match_id = mtc_id and mtc_finished = false and
                    usr_id = pm_player_id and
-                   (select count(*) from player_match where pm_match_id = mtc_id) = 1`
-        let res = await pool.query(sql);
+                   (select count(*) from player_match where pm_match_id = mtc_id) = $1`
+        let res = await pool.query(sql, [pId]);
         return {status:200, result: res.rows};
     } catch (err) {
         console.log(err);
@@ -501,8 +511,8 @@ module.exports.createMatch = async function (pId) {
             res = await pool.query(sql);
             let matchId = res.rows[0].mtc_id;
             // player starts first
-            sql = `insert into player_match (pm_player_id, pm_match_id, pm_state_id, pm_hp, pm_mana) 
-               values ($1, $2, 2, 10, 1) returning *`;         
+            sql = `insert into player_match (pm_player_id, pm_match_id, pm_state_id, pm_hp, pm_mana, pm_played) 
+               values ($1, $2, 2, 10, 10, false) returning *`;         
             res = await pool.query(sql,[pId, matchId]);
             let pmId = res.rows[0].pm_id;
             // Create 3 random cards (with repetition)
@@ -537,13 +547,15 @@ module.exports.joinMatch = async function (pId,mId) {
                 result:{msg:"That match is full"}}
         }
         let oId = res.rows[0].pm_id;
-        sql = `insert into player_match (pm_player_id, pm_match_id, pm_state_id, pm_hp, pm_mana) 
-               values ($1, $2, 2, 10, 1) returning *`;         
+        sql = `insert into player_match (pm_player_id, pm_match_id, pm_state_id, pm_hp, pm_mana, pm_played) 
+               values ($1, $2, 2, 10, 10, false) returning *`;         
         res = await pool.query(sql,[pId,mId]);
         let pmId = res.rows[0].pm_id;
         // Create 2 random cards, you will draw one later
         this.createRandomCards(pmId, 44);
         this.getCardFromDeck(pmId, 5);
+       /*  sql = `insert into matches (mtc_current_player) values ($1) where mtc_id = $2`;
+        await pool.query(sql, [pmId, mId]); */
         return { status: 200, result: {msg: "You successfully joined the match",
                                         pmId: pmId, oId: oId} };
     } catch (err) {
