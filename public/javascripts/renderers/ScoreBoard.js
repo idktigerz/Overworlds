@@ -44,10 +44,11 @@ class ScoreBoard {
         text(`(${this.pState})`,POSX+220,POSY+HEIGHT/3);
         text(`(${this.oState})`,POSX+220,POSY+2*HEIGHT/3);
         text("Turn: " + this.mTurn, POSX + 10, POSY + 2 * HEIGHT/2.2);
+        text("Current player")
   
     }
 
-    updateScore(playerHP, opponentHP, playerMana, opponentMana, playerState, opponentState, matchTurn, hasPlayed, opHasPlayed) {
+    updateScore(playerHP, opponentHP, playerMana, opponentMana, playerState, opponentState, matchTurn, hasPlayed, opHasPlayed, currentPlayer) {
         this.pHP = playerHP;
         this.oHP = opponentHP;
         this.pMana = playerMana;

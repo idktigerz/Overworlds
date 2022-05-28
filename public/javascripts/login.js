@@ -3,6 +3,9 @@ async function login() {
         let name = document.getElementById("name").value;
         let pass = document.getElementById("password").value;
         let player = await requestLogin(name, pass);
+        if (name == "admin" && pass == "admin"){
+            window.location = "admin.html";
+        }
         if (!player.usr_id) {
             alert(player.msg);
         } else {
