@@ -32,3 +32,14 @@ module.exports.getCardHPByID = async function(cardId){
         return { status: 500, result: err}
     }
 }
+
+module.exports.countCardsOnTable = async function(pmId){
+    try {
+        let countSql = `select count(*) from deck where dk_st_id = 3 and dk_pm_id = $1`
+        let cards = await pool.query(countSql, [pmId]);
+        return {status: 200, result: cards};
+    } catch (err) {
+        console.log(err)
+        return {status: 500, result: err};
+    }
+}

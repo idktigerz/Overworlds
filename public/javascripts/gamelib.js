@@ -92,7 +92,7 @@ async function refresh() {
             startingTurn = false;            
         }
     }
-    await endGame(playerMatchId);
+    await endGame(playerId);
 }
 
 async function play() {
@@ -137,9 +137,9 @@ async function end() {
     await loadScoreBoard();
     setCardsState();
     refreshButtons();
-    await endGame(playerMatchId);
+    await endGame(playerId);
     refresh();
-    location.reload();
+    //location.reload();
 } 
 
 async function loadScoreBoard() {
@@ -350,22 +350,20 @@ function returnSelected(cardList) {
     return null;
 }
 
-async function endGame(playerMatchId){
+async function endGame(playerId){
     try {
-        let res = await requestPlayerMatchInfo(playerMatchId);
-        console.log(res.mtc_winner);
+        let res = await requestPlayerMatchInfo(playerId);
+        console.log(playerId);
         if (gameOver == true){
-            if (res.mtc_winner == playerMatchId){
+            if (res.mtc_winner == playerId){
                 alert("You won!");
                 window.location = "matches.html";
-                
             }else{
                 alert("You lost!");
                 window.location = "matches.html";
             }
             
         }
-        
     } catch (err) {
         console.log(err);
     }
