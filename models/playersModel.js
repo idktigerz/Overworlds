@@ -126,9 +126,13 @@ module.exports.attackPlayer = async function (pmId, deckId) {
         if (resCheckOpDeck.rows.length != 0)
             return {status: 400, result: {msg: "Cannot attack opponent, some cards still have HP left"}}; 
         // remove 1 from opponent life
-        let sqlUpHp = `update player_match set pm_hp = pm_hp - 1
-                        where pm_id = $1`
-        await pool.query(sqlUpHp, [opPmId]);
+        res = await cModel.getCardByIDInDeck(deckId);
+        if (res.status != 200) return res;
+        let cards = res.result.rows[0];
+
+        let sqlUpHp = `update player_match set pm_hp = pm_hp - $1
+                        where pm_id = $2`
+        await pool.query(sqlUpHp, [cards.crd_stk, opPmId]);
 
         let sql = `select dk_id from deck where dk_st_id = 5 and dk_pm_id = $1
         order by random()
