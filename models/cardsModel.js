@@ -22,9 +22,9 @@ module.exports.getCardByIDInDeck = async function(deckId){
     }
 }
 
-module.exports.getCardByID = async function(cardId){
+module.exports.getCardHPByID = async function(cardId){
     try {
-        let cardSql = `select * from cards where crd_id = $1`
+        let cardSql = `select crd_hp from cards where crd_id = $1`
         let card = await pool.query(cardSql, [cardId]);
         return { status: 200, result: card};
     } catch (err) {

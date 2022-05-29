@@ -51,13 +51,13 @@ module.exports.getCardFromDeck = async function (pmId) {
         let res = await this.getMatchOfPlayer(pmId);
         if (res.status != 200) return res;
         let player = res.result;
+        console.log(player);
         if (player.mtc_turn == 1) {
             for(let i=0; i < NCARDS; i++) {
-                let sql = `select dk_id from deck where dk_st_id = 1 and dk_pm_id = $1
-                       order by random()
-                       LIMIT 1`;
-                let res = await pool.query(sql, [pmId]);
-                let cardId = res.rows[0].dk_id;
+                let sql = `select dk_id from deck where dk_st_id = 1 and dk_pm_id = $1 order by random() LIMIT 1`;
+                let result = await pool.query(sql, [pmId]);
+                console.log(result);
+                let cardId = result.rows[0].dk_id;
                 sql = `update deck set dk_st_id = 2 where dk_pm_id = $1 and dk_id = $2 returning *`;         
                 await pool.query(sql,[pmId,cardId]);
             }
@@ -66,8 +66,8 @@ module.exports.getCardFromDeck = async function (pmId) {
                 let sql = `select dk_id from deck where dk_st_id = 1 and dk_pm_id = $1
                        order by random()
                        LIMIT 1`;
-                let res = await pool.query(sql, [pmId]);
-                let cardId = res.rows[0].dk_id;
+                let result = await pool.query(sql, [pmId]);
+                let cardId = result.rows[0].dk_id;
                 sql = `update deck set dk_st_id = 2 where dk_pm_id = $1 and dk_id = $2 returning *`;         
                 await pool.query(sql,[pmId, cardId]);
             }
@@ -489,8 +489,8 @@ module.exports.createRandomCards = async function (pmId,nCards) {
             let res = await pool.query(sql);
             let cardId = res.rows[0].crd_id;
             sql = `insert into deck (dk_pm_id, dk_st_id, dk_crd_id, dk_crd_hp) 
-                    values ($1,1,$2,4) returning *`;         
-            await pool.query(sql,[pmId,cardId]);
+                    values ($1, 1, $2, 4) returning *`;         
+            await pool.query(sql,[pmId, cardId]);
         }
     } catch (err) {
         console.log(err);
