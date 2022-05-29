@@ -116,7 +116,7 @@ async function attack() {
     setCardsState();
     refreshButtons();
     refresh();
-    location.reload();
+    //location.reload();
 }
 
 async function attackPlayer() {
@@ -127,7 +127,7 @@ async function attackPlayer() {
     setCardsState();
     refreshButtons();
     refresh();
-    location.reload();
+    //location.reload();
     
 }
 
@@ -182,7 +182,7 @@ function refreshButtons() {
         let countAlive = 0;
         for(let card of board) 
         if (card.getHp() > 0) countAlive++;
-        if (countAlive <= 3) {
+        if (countAlive < 3) {
             if (returnSelected(hand)) playButton.enable();
         }
         endTurnButton.show();
@@ -223,7 +223,9 @@ function setCardsState() {
         for (let card of hand) card.enable();
     } else if (scoreBoard.getPlayerState() === "Battle") {
         for (let card of board) 
-           if (!card.hasAttacked()) card.enable();
+           if (!card.hasAttacked()){
+                card.enable();
+           } 
         for (let card of opBoard) card.enable();
         if (returnSelected(board)) {
             for (let card of opBoard) 
@@ -264,33 +266,33 @@ async function loadCards() {
 
     for (let card of myCards) {
         if (card.st_name === "Hand") {
-            hand.push(new Card(card.dk_id,card.crd_name, card.crd_atk, card.dk_crd_hp, card.crd_cost, card.st_name, false, HANDX + CARDSPACE * handPos, HANDY, false));
+            hand.push(new Card(card.dk_id,card.crd_name, card.crd_atk, card.crd_stk, card.dk_crd_hp, card.crd_cost, card.st_name, false, HANDX + CARDSPACE * handPos, HANDY, false));
             handPos++;
         } else if(card.st_name === "Deck") {
-            deck.push(new Card(card.dk_id, card.crd_name, card.crd_atk, card.dk_crd_hp, card.crd_cost, card.st_name, false, DECKX, DECKY, false));
+            deck.push(new Card(card.dk_id, card.crd_name, card.crd_atk, card.crd_stk, card.dk_crd_hp, card.crd_cost, card.st_name, false, DECKX, DECKY, false));
         }else if(card.st_name === "Board") {
-            board.push(new Card(card.dk_id, card.crd_name, card.crd_atk, card.dk_crd_hp, card.crd_cost, card.st_name, false, BOARDX + CARDSPACE * boardPos, BOARDY, false));
+            board.push(new Card(card.dk_id, card.crd_name, card.crd_atk, card.crd_stk, card.dk_crd_hp, card.crd_cost, card.st_name, false, BOARDX + CARDSPACE * boardPos, BOARDY, false));
             boardPos++
         }else if(card.st_name === "Life"){
-            playerHealth.push(new Card(card.dk_id, card.crd_name, card.crd_atk, card.dk_crd_hp, card.crd_cost, card.st_name, false, HEATLHX, HEATLHY, false));
+            playerHealth.push(new Card(card.dk_id, card.crd_name, card.crd_atk, card.crd_stk, card.dk_crd_hp, card.crd_cost, card.st_name, false, HEATLHX, HEATLHY, false));
         }else{
-            discard.push(new Card(card.dk_id, card.crd_name, card.crd_atk, card.dk_crd_hp, card.crd_cost, card.st_name, false, DISCARDX, DISCARDY, false));
+            discard.push(new Card(card.dk_id, card.crd_name, card.crd_atk, card.crd_stk, card.dk_crd_hp, card.crd_cost, card.st_name, false, DISCARDX, DISCARDY, false));
         }
     }
     for (let card of opCards) {
         if (card.st_name === "Hand"){
-            opHand.push(new Card(card.dk_id, card.crd_name, card.crd_atk, card.dk_crd_hp, card.crd_cost, card.st_name, false, OPHANDX + CARDSPACE * opHandPos, OPHANDY, true));
+            opHand.push(new Card(card.dk_id, card.crd_name, card.crd_atk, card.crd_stk, card.dk_crd_hp, card.crd_cost, card.st_name, false, OPHANDX + CARDSPACE * opHandPos, OPHANDY, true));
             opHandPos++;
         }else if (card.st_name === "Board"){
-            opBoard.push(new Card(card.dk_id, card.crd_name, card.crd_atk, card.dk_crd_hp, card.crd_cost, card.st_name, false, OPBOARDX + CARDSPACE * opBoardPos, OPBOARDY, false));
+            opBoard.push(new Card(card.dk_id, card.crd_name, card.crd_atk, card.crd_stk, card.dk_crd_hp, card.crd_cost, card.st_name, false, OPBOARDX + CARDSPACE * opBoardPos, OPBOARDY, false));
             opBoardPos++;
         }else if (card.st_name === "Deck"){
-            opDeck.push(new Card(card.dk_id, card.crd_name, card.crd_atk, card.dk_crd_hp, card.crd_cost, card.st_name, false, OPDECKX, OPDECKY, true));
+            opDeck.push(new Card(card.dk_id, card.crd_name, card.crd_atk, card.crd_stk, card.dk_crd_hp, card.crd_cost, card.st_name, false, OPDECKX, OPDECKY, true));
         }else if (card.st_name === "Life"){ 
-            opHealth.push(new Card(card.dk_id, card.crd_name, card.crd_atk, card.crd_hp, card.crd_cost, card.st_name, false, OPHEALTHX, OPHEALTHY, true));
+            opHealth.push(new Card(card.dk_id, card.crd_name, card.crd_atk, card.crd_stk, card.crd_hp, card.crd_cost, card.st_name, false, OPHEALTHX, OPHEALTHY, true));
            
         }else {
-            opDiscard.push(new Card(card.dk_id, card.crd_name, card.crd_atk, card.dk_crd_hp, card.crd_cost, card.st_name, false, OPDISCARDX, OPDISCARDY, true));
+            opDiscard.push(new Card(card.dk_id, card.crd_name, card.crd_atk, card.crd_stk, card.dk_crd_hp, card.crd_cost, card.st_name, false, OPDISCARDX, OPDISCARDY, true));
         }
     }
 }
@@ -351,7 +353,7 @@ function returnSelected(cardList) {
 async function endGame(playerMatchId){
     try {
         let res = await requestPlayerMatchInfo(playerMatchId);
-        console.log(res.mtc_winner)
+        console.log(res.mtc_winner);
         if (gameOver == true){
             if (res.mtc_winner == playerMatchId){
                 alert("You won!");

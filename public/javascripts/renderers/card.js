@@ -2,10 +2,11 @@ const CWIDTH = 80;
 const CHEIGHT = 160;
 
 class Card {
-    constructor(id, name, atk, hp, cost, state, attacked, x, y, opponent) {
+    constructor(id, name, atk, stk, hp, cost, state, attacked, x, y, opponent) {
         this.id=id;
         this.name = name;
         this.atk = atk;
+        this.stk = stk;
         this.hp = hp;
         this.cost = cost;
         this.state = state;
@@ -41,18 +42,21 @@ class Card {
                 textAlign(LEFT, TOP);
                 text(this.name, this.x + 5, this.y + 25);
                 textAlign(LEFT, CENTER);
-                text("HP: " + this.hp, this.x + 5, this.y + 90);
+                text("HP: " + this.hp, this.x + 5, this.y + CHEIGHT / 1.6);
                 textAlign(RIGHT, TOP);
                 text(this.cost, this.x + CWIDTH - 5 , this.y + 5);
                 textAlign(LEFT, BOTTOM);
-                text("Atk: " + this.atk, this.x + 5, this.y + CHEIGHT / 1.5);
+                text("Atk: " + this.atk, this.x + 5, this.y + CHEIGHT / 1.3);
+                text("Stk: " + this.atk, this.x + 5, this.y + CHEIGHT / 1.18);
+                
             }else if (this.state === 'Board'){
                 textAlign(LEFT, TOP);
                 text(this.name, this.x + 5, this.y + 10);
                 textAlign(LEFT, CENTER);
-                text("HP: " + this.hp, this.x + 5, this.y + 120);
+                text("HP: " + this.hp, this.x + 5, this.y + 100);
                 textAlign(LEFT, BOTTOM);
-                text("Atk: " + this.atk, this.x + 5, this.y + 140);
+                text("Atk: " + this.atk, this.x + 5, this.y + 120);
+                text("Stk: " + this.atk, this.x + 5, this.y + 140);
             }
         } 
 
