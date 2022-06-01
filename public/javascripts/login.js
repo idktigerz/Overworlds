@@ -13,7 +13,7 @@ async function login() {
             let matches = await requestPlayerMatches(player.usr_id);
             if (matches.length == 0) {
                 alert("That player has no matches");
-                window.location = "matches.html"
+                window.location = "lobby.html"
             }else {
                 // get first match
                 let pmatch = matches[0];

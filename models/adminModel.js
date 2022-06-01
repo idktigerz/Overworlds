@@ -36,7 +36,7 @@ module.exports.resetDatabase = async function(){
             await pool.query(userSql);
             return {status: 200, result: {msg: "omg you made it work"}}
         }else{
-            return {status: 400, result: {msg: "Cannot reset the database, figure it out stoopid"}}
+            return {status: 400, result: {msg: "Cannot reset the database"}}
         }
             
     } catch (err) {

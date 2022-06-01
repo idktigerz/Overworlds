@@ -1,23 +1,55 @@
-<html>
+ <!-- The Login Page -->
+ <!DOCTYPE html>
+ <html>
 
-<head>
-  <title>Login</title>
-  <link rel="stylesheet" href="/stylesheets/style.css">
-  <script src="./javascripts/requests/loginAndMatchRequests.js"></script>
-  <script src="./javascripts/requests/playerRequests.js"></script>
-  <script src="./javascripts/login.js"></script>
-</head>  
-<body>
-  <header>  <h1>Login</h1></header>
-  <main>
-    <p> If you have a match running you will enter that match.
-      Otherwise it will go to the match making page.
-    </p>
-    <p>Name:<input type="text" id="name"></p>
-    <p>Password:<input type="password" id="password"></p>
-    <p><input type="button" value="Login" onclick="login()"></p>
-    <p><a href="register.html">Create a new account</a></p>
-  </main>
-</body>
+     <head>
+         <meta charset="UTF-8">
+         <meta http-equiv="X-UA-Compatible" content="IE=edge">
+         <meta name="viewport" content="width=device-width, initial-scale=1.0">
+         <link rel="stylesheet" media="screen and (device-height: 600px)" />
 
-</html>
+         <title>Document</title>
+         <link href="./stylesheets/login.css" rel="stylesheet" />
+         <script src="./javascripts/requests/loginAndMatchRequests.js"></script>
+         <script src="./javascripts/requests/playerRequests.js"></script>
+         <script src="./javascripts/login.js"></script>
+
+     </head>
+     
+
+     <body>
+         <div class="Form">
+             <div class="TextWrapper">
+
+                 <div class="UserBox">
+                     <!-- <input type="text" id="name"> -->
+                     <input type="text" id="name" required="">
+                     <label>Username</label>
+                     <span></span>
+                 </div>
+
+                 <div class="PassBox">
+                     <!-- <input type="text" id="name"> -->
+                     <input type="password" id="password" required="">
+                     <label>Password</label>
+                     <span></span>
+                 </div>
+
+             </div>
+
+             <div class="SignUp">
+                     <p>Don't have an accoun? <a href="register.html">Sign Up!</a></p>
+                 </a>
+             </div>
+
+             <div class="RegisterWrapper"> 
+                   
+                 <a onclick="login()">
+                     <div class="LoginButton"></div>
+                 </a>
+                 
+             </div>
+         </div>       
+     </body>
+
+ </html>

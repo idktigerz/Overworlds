@@ -1,29 +1,48 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
     
-    <title>Lobby</title>
-    <link rel="icon" type="imace/x-icon" href="assets/favicon.png">
-    <link rel="stylesheet" href="./stylesheets/style.css">
-</head>
-<body>
-  <header>
-    <div class="container">
-        <nav>
-            <ul>
-                <a href="index.html"><img src="assets/OVERWORLDS_LOGOTIPO.png" title="Home" style="height:60px";></a>
-                <li><a href="matches.html"><img onmouseover="this.src='https://html-generator.com/uploads/images/2022/05/16/35229_QYD4WQCIY.png'" onmouseout="this.src='https://html-generator.com/uploads/images/2022/05/16/28826K0S8QWDA0L.png'" src="https://html-generator.com/uploads/images/2022/05/16/28826K0S8QWDA0L.png"  title="Matches" style="width:200px;"/></a></li>
-                <li><a href="profile.html"><img onmouseover="this.src='https://html-generator.com/uploads/images/2022/05/19/246014_57WTKGUJ.png'" onmouseout="this.src='https://html-generator.com/uploads/images/2022/05/19/18328BSWQ3V8E64.png'" src="https://html-generator.com/uploads/images/2022/05/19/18328BSWQ3V8E64.png"  title="Profile" style="width:50px;"/></a></li>
-                <li><a href="options.html"><img onmouseover="this.src='https://html-generator.com/uploads/images/2022/05/16/50173ZX6X9B64TI.png'" onmouseout="this.src='https://html-generator.com/uploads/images/2022/05/16/46522O35JJ48DYL.png'" src="https://html-generator.com/uploads/images/2022/05/16/46522O35JJ48DYL.png"  title="Options" style="width:50px;"/></a></li>
-            </ul>
-        </nav>
-    </div>
-  </header>
-  <main id="rooms">
+        <link rel="stylesheet" href="./stylesheets/lobby.css">
     
-  </main>
-</body>
+        <script src="./javascripts/requests/userRequests.js"></script>
+        <script src="./javascripts/requests/roomRequests.js"></script>
+        <script src="./javascripts/authentication/session.js"></script>
+        <script src="./javascripts/lobby.js"></script>
+    </head>
+
+    <body>
+
+        <header>
+            <div class="inner">
+                <a href="lobby.html"><div class="logo"></div></a>
+    
+
+                <nav>
+                <a href="leaderboard.html">
+                    <div class="Leaderboard" ahref="register.html"></div>
+                </a>
+                <a href="matches.html">
+                    <div class="Match" ahref="register.html"></div>
+                </a>
+                <a href="#">
+                    <div class="DeckMenu" ahref="register.html"></div>
+                </a>
+                <a href="#">
+                    <div class="Setting" ahref="register.html"></div>
+                </a>
+                <a href="profile.html">
+                    <div class="Profile" ahref="register.html"></div>
+                </a>
+                
+                </nav>
+
+            </div>
+        </header>
+        
+
+    </body>
+
 </html>

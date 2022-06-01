@@ -1,22 +1,198 @@
-.div {
-  display: flex;
+@font-face {
+  font-family: "Glitch";
+  src: url(/fonts/Mokoto\ Glitch.ttf);
+}
+* {
+  box-sizing: border-box;
+  
+}
+
+
+
+/* ? */
+body {
+  margin: 0%;
+  padding: 0%;
+  background-image: url('/assets/v322_34.png');
+  background-color: black;
+  background-repeat: no-repeat;
+  /* height: 100vh;
+  width: 50vh;
+  margin:0; */
+  /* display: grid;
+  grid-template-columns: 100px auto;
+  grid-template-areas: 'h h' 'n m' 'f f';
+  grid-template-rows: 170px auto 70px; */
+}
+
+/* Box containing all the users, passwords and buttons */
+.Form{
+  margin: 10;
+  width: 93.8%;
+  padding-left: 1140px;
+  padding-top: 400px;
+  padding-right: 90px;
+  padding-bottom: 100px;
+}
+
+/* Username and Password container */
+.TextWrapper{
+  font-family: "Glitch", sans-serif;
+
+  margin: 10 auto;
+  width: 100%;
+}
+
+/* Username */
+.UserBox{
+  
   position: relative;
-  min-width: 20px;
-  min-height: 20px;
-  max-width: 1921px;
+  background-image: url('/assets/v337_2.png');
+  background-repeat: no-repeat;
+  background-size: contain;
+
+  height: 60px;
+  width: 362px;
 }
-.image {
-  object-fit: cover;
-  object-position: center;
+
+.UserBox input[type="text"]{
+
+  top: 9px;
+  left: 5px;
   position: absolute;
-  height: 100%;
-  width: 100%;
-  top: 0;
-  left: 0;
+  background: transparent;
+  border: none;
+  box-shadow: none;
+  font-size: 33px;
+  color: #fff;
+  width: 97%;
+
 }
-.image-sizer {
-  width: 100%;
-  padding-top: 56.27277459656429%;
+
+.UserBox label{
+  position: absolute;
+  top: 0px;
+  left: 28px;
+  font-size: 38px;
+  color: #555;
   pointer-events: none;
-  font-size: 0;
+
+  display: block;
+  transition: 0.5s;
 }
+
+.UserBox input[type="text"]:focus + label,
+.UserBox input[type="text"]:valid + label{
+  transform: translate(-285px, 5px);
+  font-size: 33px;
+  color: #fff;
+  background: #23107a;
+  padding: 2px 6px;
+}
+
+.UserBox span{
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  display: block;
+  width: 100%;
+  height: 2px; 
+}
+
+/* Password */
+.PassBox{
+  position: relative;
+  background-image: url('/assets/v337_2.png');
+  background-repeat: no-repeat;
+  background-size: contain;
+  height: 60px;
+  width: 362px;
+}
+.PassBox input[type="password"]{
+  top: 9px;
+  left: 5px;
+  position: absolute;
+  background: transparent;
+  border: none;
+  box-shadow: none;
+  font-size: 33px;
+  color: #fff;
+  width: 97%;
+}
+.PassBox label{
+  position: absolute;
+  top: 0px;
+  left: 26px;
+  font-size: 38px;
+  color: #555;
+  pointer-events: none;
+
+  display: block;
+  transition: 0.5s;
+}
+.PassBox input[type="password"]:focus + label,
+.PassBox input[type="password"]:valid + label{
+  transform: translate(-292px, 5px);
+  font-size: 33px;
+  color: #fff;
+  background: #23107a;
+  padding: 2px 6px;
+}
+
+.PassBox span{
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  display: block;
+  width: 100%;
+  height: 2px; 
+}
+
+/* SignUp */
+.SignUp{
+  height: 100%;
+  font-size: 15px;
+  padding-bottom: 100px;
+}
+
+
+
+/* Login Buttons */
+.LoginButton{
+  width: 335px;
+  height: 72px;
+  background-image: url('/assets/v321_9.png');
+  background-repeat: no-repeat;
+  background-size: cover;
+/*   height: 100vh;
+  width: 50vh;
+  display: grid;
+  grid-template-columns: 100px auto;
+  grid-template-areas: 'h h' 'n m' 'f f';
+  grid-template-rows: 170px auto 70px; */
+
+/*     float: right;
+  float: bottom; */
+
+ 
+
+}
+
+.LoginButton:hover{
+  width: 332px;
+  height: 72px;
+  background-image: url('/assets/v140_7.png');
+  background-repeat: no-repeat;
+  background-size: contain;
+  
+  
+}
+
+
+
+/* These for the scrolling
+*/  
+/* .v322_34 {
+  width: 100%;
+  height: 1081px;
+} */
