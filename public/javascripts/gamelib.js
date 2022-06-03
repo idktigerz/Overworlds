@@ -54,27 +54,13 @@ const OPHEALTHY = 50;
 
 async function refresh() {
         
-    deck = [];
-
     hand = [];
 
     board = [];
 
-    discard = [];
-
-    playerHealth = [];
-
-    opDeck = [];
-
     opHand = [];
 
     opBoard = []; 
-
-    opDiscard = [];
-
-    opHealth = [];
-
- 
 
     if (scoreBoard && 
         (scoreBoard.getPlayerState() == "Setup" ||
@@ -104,7 +90,7 @@ async function play() {
     setCardsState();
     refreshButtons();
     refresh();
-    location.reload();
+    //location.reload();
 }
 
 
@@ -162,7 +148,7 @@ async function setup() {
     await loadCards()
     setCardsState();
     refreshButtons();
-    //setInterval(refresh, 5000);
+    setInterval(refresh, 5000);
     loop();
 }
 
@@ -225,6 +211,11 @@ function setCardsState() {
         for (let card of board) 
            if (!card.hasAttacked()){
                 card.enable();
+               /*  let res = await requestAttack(playerId,playerMatchId,card.getId(),ocard.getId());
+                if (res.result.status == 200){
+                    card.setAttack(true);
+                } */
+
            } 
         for (let card of opBoard) card.enable();
         if (returnSelected(board)) {

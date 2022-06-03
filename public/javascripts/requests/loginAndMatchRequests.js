@@ -1,6 +1,6 @@
 async function requestRegister(user, pass) {
     try {
-        const response = await fetch(`/api/players/`, 
+        const response = await fetch(`/api/players/register`, 
         {
             headers: {
                 'Accept': 'application/json',

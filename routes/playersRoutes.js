@@ -127,7 +127,7 @@ router.get('/:pId/matches/:mId/playermatches/:pmId/opponent', async function(req
   res.status(result.status).send(result.result);
 });
 
-router.get('/matches', async function(req, res, next){
+router.get('/leaderboard/matches', async function(req, res, next){
     console.log("Get Leaderboard info");
     let result = await lModel.getAllPlayersWins();
     res.status(result.status).send(result.result);

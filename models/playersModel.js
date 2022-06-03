@@ -141,9 +141,6 @@ module.exports.attackPlayer = async function (pmId, deckId) {
         let cardId = res.rows[0].dk_id;
         sql = `update deck set dk_st_id = 2 where dk_pm_id = $1 and dk_id = $2 returning *`;         
         await pool.query(sql,[opponent.pm_id, cardId]);
-        let sqlUpPlayed = `update player_match set pm_played = true where pm_id = $1`;
-        await pool.query(sqlUpPlayed, [pmId])
-           
         return {status:200, result: {msg: "Successfully removed HP from the opponent "}}
     } catch (err) {
         console.log(err);
@@ -190,8 +187,6 @@ module.exports.attackCard = async function (pmId, deckId, opDeckId) {
         let sqlDamage = `update deck set dk_crd_hp = $1
                       where dk_id = $2`
         await pool.query(sqlDamage, [card.dk_crd_hp - cards.crd_atk, opDeckId]);
-        let sqlUpPlayed = `update player_match set pm_played = true where pm_id = $1`;
-        await pool.query(sqlUpPlayed, [pmId])
         return {status: 200, result:{msg: "Card attacked"}};
 
     } catch (err) {
@@ -234,25 +229,50 @@ module.exports.endTurn = async function (pmId) {
                 await pool.query(sqlUpState, [4, pmId]);
             } 
         }else if (opponent.pm_state_id == 4 && opponent.pm_played == false && player.pm_state_id == 3){
+            let sqlUpPlayed = `update player_match set pm_played = true where pm_id = $1`;
+            await pool.query(sqlUpPlayed, [pmId]);
+            
             await pool.query(sqlUpState, [4, pmId]);
             await pool.query(sqlUpState, [3, opponent.pm_id]);
+
         }else if (opponent.pm_state_id == 4 && opponent.pm_played == true && player.pm_played == false){
             await pool.query(sqlUpState, [2, pmId]);
             await pool.query(sqlUpState, [2, opponent.pm_id]);
+
             let sqlUpPlayed = `update player_match set pm_played = false where pm_id = $1`;
             await pool.query(sqlUpPlayed, [pmId]);
             await pool.query(sqlUpPlayed, [opponent.pm_id]);
-        }else if (opponent.pm_state_id == 4 && opponent.pm_played == true && player.pm_played == true){
-            await pool.query(sqlUpState, [2, pmId]);
-            await pool.query(sqlUpState, [2, opponent.pm_id]);
-            let sqlUpPlayed = `update player_match set pm_played = false where pm_id = $1`;
-            await pool.query(sqlUpPlayed, [pmId]);
-            await pool.query(sqlUpPlayed, [opponent.pm_id]);
+
             let sqlUpMtcTurn = `update matches set mtc_turn = $1 where mtc_id = $2`
             await pool.query(sqlUpMtcTurn, [match.mtc_turn + 1, matchId]);
+
             let sqlUpPlayerMana = `update player_match set pm_mana = $1 where pm_id = $2`;
             await pool.query(sqlUpPlayerMana, [player.pm_mana +  1, player.pm_id]);
             await pool.query(sqlUpPlayerMana, [opponent.pm_mana + 1 , opponent.pm_id]);
+
+            if (player.pm_mana >= 10){
+                await pool.query(sqlUpPlayerMana, [10, player.pm_id]);
+            }else if (opponent.pm_mana >= 10){
+                await pool.query(sqlUpPlayerMana, [10, opponent.pm_id]);
+            }
+            this.getCardFromDeck(pmId);
+            this.getCardFromDeck(opponent.pm_id);
+
+        }else if (opponent.pm_state_id == 4 && opponent.pm_played == true && player.pm_played == true){
+            await pool.query(sqlUpState, [2, pmId]);
+            await pool.query(sqlUpState, [2, opponent.pm_id]);
+
+            let sqlUpPlayed = `update player_match set pm_played = false where pm_id = $1`;
+            await pool.query(sqlUpPlayed, [pmId]);
+            await pool.query(sqlUpPlayed, [opponent.pm_id]);
+
+            let sqlUpMtcTurn = `update matches set mtc_turn = $1 where mtc_id = $2`
+            await pool.query(sqlUpMtcTurn, [match.mtc_turn + 1, matchId]);
+
+            let sqlUpPlayerMana = `update player_match set pm_mana = $1 where pm_id = $2`;
+            await pool.query(sqlUpPlayerMana, [player.pm_mana +  1, player.pm_id]);
+            await pool.query(sqlUpPlayerMana, [opponent.pm_mana + 1 , opponent.pm_id]);
+
             if (player.pm_mana >= 10){
                 await pool.query(sqlUpPlayerMana, [10, player.pm_id]);
             }else if (opponent.pm_mana >= 10){
@@ -261,6 +281,7 @@ module.exports.endTurn = async function (pmId) {
             this.getCardFromDeck(pmId);
             this.getCardFromDeck(opponent.pm_id);
         } 
+        
         else {
             return { status: 500, result: { msg: "Current state of the players in the match is not valid" } }
         }
