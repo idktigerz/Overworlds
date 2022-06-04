@@ -3,6 +3,9 @@ async function login() {
         let name = document.getElementById("name").value;
         let pass = document.getElementById("password").value;
         let player = await requestLogin(name, pass);
+        if (name == "admin" && pass == "admin"){
+            window.location = "admin.html";
+        }
         if (!player.usr_id) {
             alert(player.msg);
         } else {
@@ -10,7 +13,7 @@ async function login() {
             let matches = await requestPlayerMatches(player.usr_id);
             if (matches.length == 0) {
                 alert("That player has no matches");
-                window.location = "matches.html"
+                window.location = "lobby.html"
             }else {
                 // get first match
                 let pmatch = matches[0];
