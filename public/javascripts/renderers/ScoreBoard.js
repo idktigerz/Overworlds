@@ -1,7 +1,7 @@
 const WIDTH = 300;
 const HEIGHT = 100;
 const POSX = 1300;
-const POSY = 10;
+const POSY = 500;
 
 class ScoreBoard {
     constructor(playerName, opponentName,playerHP, opponentHP, playerMana, opponentMana, playerState, opponentState, matchTurn, hasPlayed, opHasPlayed) {

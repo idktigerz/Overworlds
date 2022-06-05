@@ -47,7 +47,7 @@ class Card {
                 text(this.cost, this.x + CWIDTH - 5 , this.y + 5);
                 textAlign(LEFT, BOTTOM);
                 text("Atk: " + this.atk, this.x + 5, this.y + CHEIGHT / 1.3);
-                text("Stk: " + this.atk, this.x + 5, this.y + CHEIGHT / 1.18);
+                text("Stk: " + this.stk, this.x + 5, this.y + CHEIGHT / 1.18);
                 
             }else if (this.state === 'Board'){
                 textAlign(LEFT, TOP);
@@ -56,7 +56,7 @@ class Card {
                 text("HP: " + this.hp, this.x + 5, this.y + 100);
                 textAlign(LEFT, BOTTOM);
                 text("Atk: " + this.atk, this.x + 5, this.y + 120);
-                text("Stk: " + this.atk, this.x + 5, this.y + 140);
+                text("Stk: " + this.stk, this.x + 5, this.y + 140);
             }
         } 
 

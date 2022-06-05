@@ -79,6 +79,7 @@ async function refresh() {
         }
     }
     await endGame(playerId);
+    location.reload();
 }
 
 async function play() {
@@ -348,10 +349,10 @@ async function endGame(playerId){
         if (gameOver == true){
             if (res.mtc_winner == playerId){
                 alert("You won!");
-                window.location = "matches.html";
+                window.location = "lobby.html";
             }else{
                 alert("You lost!");
-                window.location = "matches.html";
+                window.location = "lobby.html";
             }
             
         }

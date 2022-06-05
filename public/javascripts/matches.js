@@ -1,5 +1,6 @@
 let pId;
-
+setInterval(window.onload, 2000);
+ 
 window.onload = async function() {
     pId = sessionStorage.getItem("playerId");
     console.log(pId)
