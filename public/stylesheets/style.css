@@ -1,12 +1,22 @@
 body {
-    padding: 50px;
-    font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+    font-family: HkGrotesk;
+    font-style: normal;
+    font-weight: 600;
+    line-height: normal;
+    font-size: 30px;
+    text-align: center;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    padding-top:75px;
+    padding-bottom:30px;
     background-image: url('/assets/background.png');
     background-repeat: no-repeat;
     background-attachment: fixed;
     background-size: cover;
     margin: 0px;
   }
+
+
 
   a {
     color: #00B7FF;
@@ -121,3 +131,4 @@ nav ul li a.active{
     position: relative;
     top: 50%;
 }
+

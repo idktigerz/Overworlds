@@ -313,7 +313,7 @@ module.exports.getPlayerDeck = async function (pId,pmId) {
         let resultCheck = await pool.query(sqlCheck, [pId,pmId]);
         if (resultCheck.rows.length > 0) { // I'm the owner of the deck
             let sql = `select dk_id, dk_pm_id, dk_st_id, dk_crd_id, dk_crd_hp,
-            st_name, crd_name, crd_atk, crd_stk, crd_cost
+            st_name, crd_name, crd_atk, crd_stk, crd_cost, crd_img
             from deck, card_state, cards 
             where dk_pm_id = $1 and
                 dk_st_id = st_id and
@@ -330,7 +330,7 @@ module.exports.getPlayerDeck = async function (pId,pmId) {
         
         if (resultCheckOp.rows.length > 0) {
             let sql = `select dk_id, dk_pm_id, dk_st_id, dk_crd_id, dk_crd_hp,
-            st_name, crd_name, crd_atk, crd_stk, crd_cost
+            st_name, crd_name, crd_atk, crd_stk, crd_cost, crd_img
             from deck, card_state, cards 
             where dk_pm_id = $1 and
             dk_st_id = st_id and

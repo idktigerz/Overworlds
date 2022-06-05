@@ -22,33 +22,18 @@ class ScoreBoard {
         return this.pState;
     }
     getOpponentState() {
-        return this.pState;
-    }
-
-    getPlayerHasPlayed(){
-
+        return this.oState;
     }
     
     draw() {
-        fill(100,200,100);
-        stroke(0,0,0);
-        rect (POSX,POSY,WIDTH,HEIGHT,5,5,5,5);
-        fill(0,0,0);
         textAlign(LEFT,CENTER);
-        text("Player: "+this.pName,POSX+10,POSY+HEIGHT/3);
-        text("Opponent: "+this.oName,POSX+10,POSY+2*HEIGHT/3);
-        text("HP: "+this.pHP,POSX+110,POSY+HEIGHT/3);
-        text("HP: "+this.oHP,POSX+110,POSY+2*HEIGHT/3);
-        text("MANA: "+this.pMana,POSX+170,POSY+HEIGHT/3);
-        text("MANA: "+this.oMana,POSX+170,POSY+2*HEIGHT/3);
-        text(`(${this.pState})`,POSX+220,POSY+HEIGHT/3);
-        text(`(${this.oState})`,POSX+220,POSY+2*HEIGHT/3);
+        text(this.pMana, POSX + 170, POSY + HEIGHT / 3);
+        text(`${this.pState}`, POSX + 220,POSY + HEIGHT / 3);
+        textSize(14);
         text("Turn: " + this.mTurn, POSX + 10, POSY + 2 * HEIGHT/2.2);
-        text("Current player")
-  
     }
 
-    updateScore(playerHP, opponentHP, playerMana, opponentMana, playerState, opponentState, matchTurn, hasPlayed, opHasPlayed, currentPlayer) {
+    updateScore(playerHP, opponentHP, playerMana, opponentMana, playerState, opponentState, matchTurn, hasPlayed, opHasPlayed) {
         this.pHP = playerHP;
         this.oHP = opponentHP;
         this.pMana = playerMana;
