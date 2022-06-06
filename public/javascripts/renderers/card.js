@@ -52,7 +52,7 @@ class Card {
         if(!this.opponent){
             if (this.state === 'Hand'){
                 textAlign(LEFT, TOP);
-                text(this.name, this.x + 5, this.y + 25);
+                text(this.name, this.x + 5, this.y + 5);
                 textAlign(LEFT, CENTER);
                 text("HP: " + this.hp, this.x + 5, this.y + CHEIGHT / 1.6);
                 textAlign(RIGHT, TOP);
@@ -61,18 +61,18 @@ class Card {
                 text("Atk: " + this.atk, this.x + 5, this.y + CHEIGHT / 1.3);
                 text("Stk: " + this.stk, this.x + 5, this.y + CHEIGHT / 1.18);
                 imageMode(CENTER)
-                image(Card.images[this.card_id],this.x+CWIDTH/2, this.y+ CHEIGHT/2,CWIDTH,CHEIGHT);
+                image(Card.images[this.card_id],this.x+CWIDTH/2, this.y+ CHEIGHT/2.5, 50, 50);
                 
             }else if (this.state === 'Board'){
                 textAlign(LEFT, TOP);
-                text(this.name, this.x + 5, this.y + 10);
+                text(this.name, this.x + 5, this.y + 5);
                 textAlign(LEFT, CENTER);
                 text("HP: " + this.hp, this.x + 5, this.y + 100);
                 textAlign(LEFT, BOTTOM);
                 text("Atk: " + this.atk, this.x + 5, this.y + 120);
                 text("Stk: " + this.stk, this.x + 5, this.y + 140);
                 imageMode(CENTER)
-                image(Card.images[this.card_id],this.x+CWIDTH/2, this.y+ CHEIGHT/2,CWIDTH,CHEIGHT);
+                image(Card.images[this.card_id],this.x + CWIDTH/1.8, this.y+ CHEIGHT/2.5,50 ,50);
             }
         } 
     }

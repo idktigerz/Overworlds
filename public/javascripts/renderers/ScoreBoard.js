@@ -27,11 +27,13 @@ class ScoreBoard {
     
     draw() {
         textAlign(LEFT,CENTER);
-        text(this.pMana, POSX + 170, POSY + HEIGHT / 3);
-        text(`${this.pState}`, POSX + 220,POSY + HEIGHT / 3);
-        textSize(14);
+        textStyle(NORMAL);
+        textSize(14)
+        text(this.pMana, POSX + 70, POSY + HEIGHT / 2);
+        text("You are in: " + `${this.pState}`, POSX + 170,POSY + HEIGHT / 3);
         text("Turn: " + this.mTurn, POSX + 10, POSY + 2 * HEIGHT/2.2);
-    }
+        text("Your health:" + this.pHP, POSX + 170, POSY + HEIGHT / 2)
+    } 
 
     updateScore(playerHP, opponentHP, playerMana, opponentMana, playerState, opponentState, matchTurn, hasPlayed, opHasPlayed) {
         this.pHP = playerHP;

@@ -271,16 +271,10 @@ async function loadCards() {
 }
 
 function draw() {
-    stroke(100000);
-    line(0, (windowHeight / 3), windowWidth, (windowHeight / 3));
-    noStroke();
     scoreBoard.draw();
-    
+    line(0, (windowHeight / 3), windowWidth, (windowHeight / 3));
 //  -------------- player side -----------------    
-    for (let card of deck) {
-        card.draw();
-        
-    }    
+    for (let card of deck) {card.draw();}    
     for (let card of board) {card.draw()};
     for (let card of hand) {card.draw()};
     for (let card of discard) {card.draw()};
@@ -288,8 +282,10 @@ function draw() {
 
 //  -------------- opponent side ---------------    
     for (let card of opHand){
+        let opHandPos = 0;
         card.draw();
-        image(cardBack, OPDECKX + 40.5, OPDECKY + 82, 80, 160);
+        image(cardBack, OPHANDX + 40.5 + CARDSPACE * opHandPos, OPHANDY + 82, 80, 160);
+        opHandPos++;
     } 
     for (let card of opDeck){
         card.draw();
@@ -303,9 +299,7 @@ function draw() {
     for (let button of buttons){
         button.draw();
     } 
-
-    image(cardBack, DECKX + 40.5, DECKY + 82, 80, 160);
-
+    
 }
 
 function mouseClicked() {
