@@ -109,3 +109,20 @@ async function requestPlayerInfo(id) {
         console.log(err);
     }
 }
+
+async function requestKillPlayer(pmId){
+    try {
+        const response = await fetch(`/api/players/playermatches/${pmId}/opponent/kill`, 
+        {
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+          method: "PUT",
+        });
+        var result = await response.json();
+        return result;
+    } catch (err) {
+        console.log(err)
+    }
+}

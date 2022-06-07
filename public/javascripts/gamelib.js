@@ -5,10 +5,11 @@ var cardBack;
 var mana;
 var manaBorder;
 
-var attackButton = new Button("Attack", 900, 350, attack);
-var playButton = new Button("Play card", 1000, 350, play);
-var endTurnButton = new Button("End turn", 1200, 350, end);
-var buttons = [ attackButton, playButton, endTurnButton ];
+var attackButton = new Button("Attack", 900, 450, attack);
+var playButton = new Button("Play card", 1000, 450, play);
+var endTurnButton = new Button("End turn", 1200, 450, end);
+var killButton = new Button("Kill player", 1000, 500, killPlayer);
+var buttons = [ attackButton, playButton, endTurnButton, killButton ];
 
 
 var startingTurn = false;
@@ -17,7 +18,7 @@ const CARDSPACE = 150;
 
 var deck = [];
 const DECKX = 1000
-const DECKY = 600
+const DECKY = 560
 
 var hand = [];
 const HANDX = 300;
@@ -25,11 +26,11 @@ const HANDY = 770;
 
 var board = [];
 const BOARDX = 400;
-const BOARDY = 450;
+const BOARDY = 500;
 
 var discard = [];
-const DISCARDX = 200;
-const DISCARDY = 600;
+const DISCARDX = 100;
+const DISCARDY = 560;
 
 var playerHealth = [];
 const HEATLHX = 10;
@@ -37,7 +38,7 @@ const HEATLHY = 700
 
 var opDeck = [];
 const OPDECKX = 1000;
-const OPDECKY = 150;
+const OPDECKY = 210;
 
 var opHand = [];
 const OPHANDX = 300;
@@ -48,23 +49,30 @@ const OPBOARDX = 400;
 const OPBOARDY = 250;
 
 var opDiscard = [];
-const OPDISCARDX = 200;
-const OPDISCARDY = 50;
+const OPDISCARDX = 100;
+const OPDISCARDY = 210;
 
 var opHealth = [];
 const OPHEALTHX = 10;
 const OPHEALTHY = 50;
 
 async function refresh() {
-    if (scoreBoard && 
-        (scoreBoard.getPlayerState() == "Wait" ||
-        scoreBoard.getPlayerState() == "Battle")) {
-            await loadScoreBoard();
-            await loadCards();
-            setCardsState(); 
-    }
-    await endGame(playerId);
-    location.reload();
+        hand = [];
+
+        board = [];
+
+        discard = [];
+
+        opHand = [];
+
+        opBoard = []; 
+
+        opDiscard = [];
+
+        await loadScoreBoard();
+        await loadCards();
+        setCardsState();
+        refreshButtons();        
 }
 
 async function play() {
@@ -75,7 +83,7 @@ async function play() {
     await loadCards();
     setCardsState();
     refreshButtons();
-    //location.reload();
+    location.reload();
 }
 
 
@@ -86,7 +94,7 @@ async function attack() {
     await loadCards();
     setCardsState();
     refreshButtons();
-    //location.reload();
+    location.reload();
 }
 
 async function attackPlayer() {
@@ -96,7 +104,7 @@ async function attackPlayer() {
     await loadScoreBoard();
     setCardsState();
     refreshButtons();
-    //location.reload();
+    location.reload();
     
 }
 
@@ -107,7 +115,7 @@ async function end() {
     setCardsState();
     refreshButtons();
     await endGame(playerId);
-    //location.reload();
+    location.reload();
 } 
 
 async function loadScoreBoard() {
@@ -133,6 +141,7 @@ async function setup() {
     cardBack = loadImage('assets/back.png');
     mana = loadImage('assets/mana.png');
     manaBorder = loadImage('assets/manaBorder.png');
+    bgMusic = loadSound('assets/Space.mp3')
     await loadScoreBoard();
     await loadCards()
     setCardsState();
@@ -140,6 +149,7 @@ async function setup() {
     
     image(manaBorder, 1300, 500)
     image(mana, 1350, 515);
+    
     setInterval(refresh, 5000);
     loop();
 }
@@ -159,10 +169,16 @@ function refreshButtons() {
         }
         endTurnButton.show();
         endTurnButton.enable();
+
+        killButton.show();
+        killButton.enable();
     } else if (scoreBoard.getPlayerState() === "Battle") {
         attackButton.show();
         endTurnButton.show();
         endTurnButton.enable();
+
+        killButton.show();
+        killButton.enable();
         let countAlive = 0;
         for(let card of opBoard) 
         if (card.getHp() > 0) countAlive++;
@@ -272,33 +288,45 @@ async function loadCards() {
 
 function draw() {
     scoreBoard.draw();
-    line(0, (windowHeight / 3), windowWidth, (windowHeight / 3));
+    line(0, (windowHeight / 2), windowWidth, (windowHeight / 2));
 //  -------------- player side -----------------    
-    for (let card of deck) {card.draw();}    
+    for (let card of deck) {
+        card.draw();
+        
+    }    
     for (let card of board) {card.draw()};
     for (let card of hand) {card.draw()};
-    for (let card of discard) {card.draw()};
+    for (let card of discard) {
+        card.draw()
+        image(cardBack, DISCARDX + 61, DISCARDY + 102, 120, 200);
+    };
     for (let card of playerHealth) {card.draw()};
 
 //  -------------- opponent side ---------------    
     for (let card of opHand){
         let opHandPos = 0;
         card.draw();
-        image(cardBack, OPHANDX + 40.5 + CARDSPACE * opHandPos, OPHANDY + 82, 80, 160);
+        image(cardBack, OPHANDX + 61 + CARDSPACE * opHandPos, OPHANDY + 102, 120, 200);
         opHandPos++;
     } 
     for (let card of opDeck){
         card.draw();
-        image(cardBack, OPDECKX + 40.5, OPDECKY + 82, 80, 160);
+        image(cardBack, OPDECKX + 61, OPDECKY + 102, 120, 200);
     } 
     for (let card of opBoard) {card.draw()};
-    for (let card of opDiscard) {card.draw()};
+    for (let card of opDiscard) {
+        card.draw()
+        image(cardBack, OPDISCARDX + 61, OPDISCARDY + 102, 120, 200);
+    };
     for (let card of opHealth) {card.draw()};
 
 // ---------------- buttons --------------------    
     for (let button of buttons){
         button.draw();
     } 
+// --------------------------------------------------
+    image(cardBack, DECKX + 61, DECKY + 102, 120, 200);
+  
     
 }
 
@@ -354,20 +382,23 @@ function returnHovered(cardList){
     return null;
 }
 
-async function endGame(playerId){
+async function endGame(){
     try {
-        let res = await requestPlayerMatchInfo(playerId);
+        let res = await requestPlayerMatchInfo(playerMatchId);
         if (gameOver == true){
             if (res.mtc_winner == playerId){
                 alert("You won!");
-                window.location = "lobby.html";
             }else{
                 alert("You lost!");
-                window.location = "lobby.html";
             }
-            
+            window.location = "lobby.html";
         }
     } catch (err) {
         console.log(err);
     }
+}
+
+async function killPlayer(){
+    let res = await requestKillPlayer(playerMatchId);
+    alert(res.msg);
 }

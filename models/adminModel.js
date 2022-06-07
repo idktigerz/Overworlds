@@ -22,19 +22,19 @@ module.exports.resetDatabase = async function(){
                                 insert into "pm_state" ("pms_id", "pms_name") values (4, 'Wait');`
             await pool.query(player_stateSql);
 
-            let cardSql = `insert into "cards" ("crd_atk", "crd_cost", "crd_dsc", "crd_img", "crd_name", "crd_stk", "crd_tp_id", "crd_hp") values (1, 1, 'Description', './assets/images/raidron.png', 'Raidron', 1, 1, 1);
-                        insert into "cards" ("crd_atk", "crd_cost", "crd_dsc", "crd_img", "crd_name", "crd_stk", "crd_tp_id", "crd_hp") values (1, 3, 'Description', './assets/images/salvagetron.png', 'Salvagetron', 2, 1, 2);
-                        insert into "cards" ("crd_atk", "crd_cost", "crd_dsc", "crd_img", "crd_name", "crd_stk", "crd_tp_id", "crd_hp") values (2, 5, 'Description', './assets/images/vicecron.png', 'Vicecron', 2, 1, 4);
+            let cardSql = `insert into "cards" ("crd_atk", "crd_cost", "crd_dsc", "crd_img", "crd_name", "crd_stk", "crd_tp_id", "crd_hp") values (0, 1, 'Description', './assets/images/raidron.png', 'Raidron', 1, 1, 1);
+                        insert into "cards" ("crd_atk", "crd_cost", "crd_dsc", "crd_img", "crd_name", "crd_stk", "crd_tp_id", "crd_hp") values (1, 3, 'Description', './assets/images/salvagetron.png', 'Salvagetron', 1, 1, 2);
+                        insert into "cards" ("crd_atk", "crd_cost", "crd_dsc", "crd_img", "crd_name", "crd_stk", "crd_tp_id", "crd_hp") values (0, 5, 'Description', './assets/images/vicecron.png', 'Vicecron', 2, 1, 6);
                         insert into "cards" ("crd_atk", "crd_cost", "crd_dsc", "crd_img", "crd_name", "crd_stk", "crd_tp_id", "crd_hp") values (1, 3, 'Description', './assets/images/rno.png', 'R-no', 1, 1, 3);
-                        insert into "cards" ("crd_atk", "crd_cost", "crd_dsc", "crd_img", "crd_name", "crd_stk", "crd_tp_id", "crd_hp") values (2, 5, NULL, './assets/images/dya.png', 'D-ya', 2, 1, 5);
-                        insert into "cards" ("crd_atk", "crd_cost", "crd_dsc", "crd_img", "crd_name", "crd_stk", "crd_tp_id", "crd_hp") values (3, 6, NULL, './assets/images/miru.png', 'Miru', 2, 1, 7);`
+                        insert into "cards" ("crd_atk", "crd_cost", "crd_dsc", "crd_img", "crd_name", "crd_stk", "crd_tp_id", "crd_hp") values (2, 7, NULL, './assets/images/dya.png', 'D-ya', 2, 1, 7);
+                        insert into "cards" ("crd_atk", "crd_cost", "crd_dsc", "crd_img", "crd_name", "crd_stk", "crd_tp_id", "crd_hp") values (2, 2, NULL, './assets/images/miru.png', 'Miru', 2, 1, 2);`
             await pool.query(cardSql);
 
             let userSql = `insert into "users" ("usr_name", "usr_passwd") values ('admin', 'admin');
                            insert into "users" ("usr_name", "usr_passwd") values ('Tomas', 'tomas');
                            insert into "users" ("usr_name", "usr_passwd") values ('Bruno', 'bruno');`;
             await pool.query(userSql);
-            return {status: 200, result: {msg: "omg you made it work"}}
+            return {status: 200, result: {msg: "Database reset"}}
         }else{
             return {status: 400, result: {msg: "Cannot reset the database"}}
         }

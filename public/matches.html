@@ -3,11 +3,18 @@
 <head>
   <title>Matches</title>
   <link rel="stylesheet" href="/stylesheets/style.css">
+  <link rel="icon" type="imace/x-icon" href="assets/favicon.png">
   <script src="./javascripts/requests/loginAndMatchRequests.js"></script>
   <script src="./javascripts/requests/playerRequests.js"></script>
   <script src="./javascripts/matches.js"></script>
 </head>  
 <body>
+  <audio  autoplay  id="myAudio"> 
+    <source src="assets/audio/Space.mp3" type="audio/mp3"> 
+  </audio>
+  <script>
+      document.getElementById("myAudio").volume = 0.2;
+  </script> 
   <header>  <h1>Choose a match or create a new one</h1></header>
   <main>
     <p>After creating or joining a match you cannot leave and cannot 

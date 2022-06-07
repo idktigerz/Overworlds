@@ -1,5 +1,5 @@
-const CWIDTH = 80;
-const CHEIGHT = 160;
+const CWIDTH = 120;
+const CHEIGHT = 200;
 
 
 class Card {
@@ -23,7 +23,14 @@ class Card {
     }
     draw() {
         if (this.selected) {
-            fill(100, 200, 100);
+            //fill(100, 200, 100);
+            rect(1400, 100, CWIDTH * 2, CHEIGHT * 2, 2, 2, 2);
+            stroke(0, 0, 0);
+            strokeWeight(1);
+            imageMode(CENTER)
+            image(Card.images[this.card_id], 1520, 300, CWIDTH * 2, CHEIGHT * 2);
+            textAlign(LEFT, CENTER);
+            text(this.hp, this.x + 5, this.y + 145);
             
         } else if (this.attacked) {
             fill(200, 100, 100);
@@ -51,28 +58,18 @@ class Card {
 
         if(!this.opponent){
             if (this.state === 'Hand'){
-                textAlign(LEFT, TOP);
-                text(this.name, this.x + 5, this.y + 5);
-                textAlign(LEFT, CENTER);
-                text("HP: " + this.hp, this.x + 5, this.y + CHEIGHT / 1.6);
-                textAlign(RIGHT, TOP);
-                text(this.cost, this.x + CWIDTH - 5 , this.y + 5);
-                textAlign(LEFT, BOTTOM);
-                text("Atk: " + this.atk, this.x + 5, this.y + CHEIGHT / 1.3);
-                text("Stk: " + this.stk, this.x + 5, this.y + CHEIGHT / 1.18);
                 imageMode(CENTER)
-                image(Card.images[this.card_id],this.x+CWIDTH/2, this.y+ CHEIGHT/2.5, 50, 50);
+                image(Card.images[this.card_id],this.x+CWIDTH/2, this.y+ CHEIGHT/2, CWIDTH, CHEIGHT);
+                textAlign(LEFT, CENTER);
+                text(this.hp, this.x + 5, this.y + 145);
+        
+
                 
             }else if (this.state === 'Board'){
-                textAlign(LEFT, TOP);
-                text(this.name, this.x + 5, this.y + 5);
-                textAlign(LEFT, CENTER);
-                text("HP: " + this.hp, this.x + 5, this.y + 100);
-                textAlign(LEFT, BOTTOM);
-                text("Atk: " + this.atk, this.x + 5, this.y + 120);
-                text("Stk: " + this.stk, this.x + 5, this.y + 140);
                 imageMode(CENTER)
-                image(Card.images[this.card_id],this.x + CWIDTH/1.8, this.y+ CHEIGHT/2.5,50 ,50);
+                image(Card.images[this.card_id],this.x + CWIDTH/2, this.y+ CHEIGHT/2, CWIDTH ,CHEIGHT);
+                text(this.hp, this.x + 10, this.y + 150);
+                textAlign(LEFT, BOTTOM);
             }
         } 
     }
