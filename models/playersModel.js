@@ -590,3 +590,24 @@ module.exports.joinMatch = async function (pId,mId) {
     }
 }
 
+module.exports.killOpponent = async function(pmId){
+    try {
+        let res = await this.getPlayerMatch(pmId);
+        if (res.status != 200) return res;
+        let player = res.result;
+        let matchId = player.pm_match_id;
+        console.log(matchId)
+        res = await this.getOpponent(pmId, matchId);
+        if (res.status != 200) return res;
+        let opponent = res.result;
+
+        let sql = `update player_match set pm_hp = 0 where pm_id = $1`;
+        await pool.query(sql, [opponent.pm_id]);
+
+        return { status: 200, result: { msg: "Press End Turn to end the match " } };
+    } catch (err) {
+        console.log(err);
+        return { status: 500, result: err };
+    }
+}
+

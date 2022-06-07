@@ -133,4 +133,10 @@ router.get('/leaderboard/matches', async function(req, res, next){
     res.status(result.status).send(result.result);
 });
 
+router.put('/playermatches/:pmId/opponent/kill', async function (req, res, next){
+    console.log("Forfeit match");
+    let pmId = req.params.pmId;
+    let result = await pModel.killOpponent(pmId);
+    res.status(result.status).send(result.result);
+});
 module.exports = router;
