@@ -1,12 +1,14 @@
 var playerId;
 var scoreBoard;
 var gameOver;
+var cardBack;
+var mana;
+var manaBorder;
 
-var getCardsButton = new Button("Get cards", 700, 350, getCards);
 var attackButton = new Button("Attack", 900, 350, attack);
 var playButton = new Button("Play card", 1000, 350, play);
 var endTurnButton = new Button("End turn", 1200, 350, end);
-var buttons = [ getCardsButton, attackButton, playButton, endTurnButton ];
+var buttons = [ attackButton, playButton, endTurnButton ];
 
 
 var startingTurn = false;
@@ -15,7 +17,7 @@ const CARDSPACE = 150;
 
 var deck = [];
 const DECKX = 1000
-const DECKY = 700
+const DECKY = 600
 
 var hand = [];
 const HANDX = 300;
@@ -26,8 +28,8 @@ const BOARDX = 400;
 const BOARDY = 450;
 
 var discard = [];
-const DISCARDX = 600;
-const DISCARDY = 700;
+const DISCARDX = 200;
+const DISCARDY = 600;
 
 var playerHealth = [];
 const HEATLHX = 10;
@@ -35,7 +37,7 @@ const HEATLHY = 700
 
 var opDeck = [];
 const OPDECKX = 1000;
-const OPDECKY = 50;
+const OPDECKY = 150;
 
 var opHand = [];
 const OPHANDX = 300;
@@ -46,7 +48,7 @@ const OPBOARDX = 400;
 const OPBOARDY = 250;
 
 var opDiscard = [];
-const OPDISCARDX = 400;
+const OPDISCARDX = 200;
 const OPDISCARDY = 50;
 
 var opHealth = [];
@@ -55,21 +57,14 @@ const OPHEALTHY = 50;
 
 async function refresh() {
     if (scoreBoard && 
-        (scoreBoard.getPlayerState() == "Setup" || scoreBoard.getPlayerState() == "Draw" ||
+        (scoreBoard.getPlayerState() == "Wait" ||
         scoreBoard.getPlayerState() == "Battle")) {
             await loadScoreBoard();
             await loadCards();
-            setCardsState();
-            startingTurn = true;        
-    } else {
-        if (startingTurn) {
-            await loadScoreBoard();
-            await loadCards();
-            setCardsState();
-            refreshButtons();
-            startingTurn = false;            
-        }
-    } 
+            setCardsState(); 
+    }
+    await endGame(playerId);
+    location.reload();
 }
 
 async function play() {
@@ -80,15 +75,9 @@ async function play() {
     await loadCards();
     setCardsState();
     refreshButtons();
-    refresh();
+    //location.reload();
 }
 
-async function getCards(){
-    await requestCardfromDeck(playerMatchId);
-    await loadCards();
-    setCardsState();
-    refreshButtons();
-}
 
 async function attack() {
     let card = returnSelected(board);
@@ -97,6 +86,7 @@ async function attack() {
     await loadCards();
     setCardsState();
     refreshButtons();
+    //location.reload();
 }
 
 async function attackPlayer() {
@@ -106,6 +96,8 @@ async function attackPlayer() {
     await loadScoreBoard();
     setCardsState();
     refreshButtons();
+    //location.reload();
+    
 }
 
 async function end() {
@@ -114,6 +106,8 @@ async function end() {
     await loadScoreBoard();
     setCardsState();
     refreshButtons();
+    await endGame(playerId);
+    //location.reload();
 } 
 
 async function loadScoreBoard() {
@@ -121,7 +115,7 @@ async function loadScoreBoard() {
     let p2 = await requestPlayerMatchInfo(opponentMatchId);
     playerId = p1.usr_id;
     gameOver = p1.mtc_finished;
-    scoreBoard = new ScoreBoard(p1.usr_name, p2.usr_name, p1.pm_hp, p2.pm_hp, p1.pm_mana, p2.pm_mana, p1.pms_name, p2.pms_name, p1.mtc_turn);
+    scoreBoard = new ScoreBoard(p1.usr_name, p2.usr_name, p1.pm_hp, p2.pm_hp, p1.pm_mana, p2.pm_mana, p1.pms_name, p2.pms_name, p1.mtc_turn, p1.pm_played, p2.pm_played);
 }
 
 function preload() {
@@ -132,11 +126,21 @@ async function setup() {
     noLoop();
     let canvas = createCanvas(windowWidth, windowHeight);
     canvas.parent('game');
+    let cards = await requestCardsInfo();
+    for (let card of cards){
+        Card.images[card.crd_id] = await loadImage(card.crd_img);
+    }
+    cardBack = loadImage('assets/back.png');
+    mana = loadImage('assets/mana.png');
+    manaBorder = loadImage('assets/manaBorder.png');
     await loadScoreBoard();
     await loadCards()
     setCardsState();
     refreshButtons();
-    //setInterval(refresh,1000);
+    
+    image(manaBorder, 1300, 500)
+    image(mana, 1350, 515);
+    setInterval(refresh, 5000);
     loop();
 }
 
@@ -145,15 +149,14 @@ function refreshButtons() {
         button.hide();
         button.disable();
     }
-    if (scoreBoard.getPlayerState() === "Draw"){
-        getCardsButton.show();
-        getCardsButton.enable();
-        endTurnButton.show();
-        endTurnButton.enable();
-    }
-    else if (scoreBoard.getPlayerState() === "Setup") {
-        playButton.show();
-        if (returnSelected(hand)) playButton.enable();
+    if (scoreBoard.getPlayerState() === "Setup") {
+        let countAlive = 0;
+        for(let card of board) 
+        if (card.getHp() > 0) countAlive++;
+        if (countAlive < 3) {
+            playButton.show();
+            if (returnSelected(hand)) playButton.enable();
+        }
         endTurnButton.show();
         endTurnButton.enable();
     } else if (scoreBoard.getPlayerState() === "Battle") {
@@ -174,15 +177,17 @@ function refreshButtons() {
     }
 }
 
-function setCardsState() {
+async function setCardsState() {
     for (let card of hand) card.disable();
     for (let card of deck) card.disable()
     for (let card of board) card.disable();
+    for (let card of discard) card.disable();
     for (let card of playerHealth) card.disable();
     for (let card of opHand) card.disable();
     for (let card of opHealth) card.disable();
     for (let card of opDeck) card.disable();
     for (let card of opBoard) card.disable();
+    for (let card of opDiscard) card.disable();
 
     if (scoreBoard.getPlayerState() === "Draw"){
         for (let card of deck) card.enable();
@@ -190,7 +195,9 @@ function setCardsState() {
         for (let card of hand) card.enable();
     } else if (scoreBoard.getPlayerState() === "Battle") {
         for (let card of board) 
-           if (!card.hasAttacked()) card.enable();
+           if (!card.hasAttacked()){
+                card.enable();
+           } 
         for (let card of opBoard) card.enable();
         if (returnSelected(board)) {
             for (let card of opBoard) 
@@ -231,71 +238,78 @@ async function loadCards() {
 
     for (let card of myCards) {
         if (card.st_name === "Hand") {
-            hand.push(new Card(card.dk_id,card.crd_name, card.crd_atk, card.dk_crd_hp, card.crd_cost, card.st_name, false, HANDX + CARDSPACE * handPos, HANDY, false));
+            hand.push(new Card(card.dk_id, card.dk_crd_id, card.crd_name, card.crd_atk, card.crd_stk, card.dk_crd_hp, card.crd_cost, card.st_name, false, HANDX + CARDSPACE * handPos, HANDY, false));
             handPos++;
         } else if(card.st_name === "Deck") {
-            deck.push(new Card(card.dk_id, card.crd_name, card.crd_atk, card.dk_crd_hp, card.crd_cost, card.st_name, false, DECKX, DECKY, false));
+            deck.push(new Card(card.dk_id, card.dk_crd_id, card.crd_name, card.crd_atk, card.crd_stk, card.dk_crd_hp, card.crd_cost, card.st_name, false, DECKX, DECKY, false));
         }else if(card.st_name === "Board") {
-            board.push(new Card(card.dk_id, card.crd_name, card.crd_atk, card.dk_crd_hp, card.crd_cost, card.st_name, false, BOARDX + CARDSPACE * boardPos, BOARDY, false));
+            board.push(new Card(card.dk_id, card.dk_crd_id, card.crd_name, card.crd_atk, card.crd_stk, card.dk_crd_hp, card.crd_cost, card.st_name, false, BOARDX + CARDSPACE * boardPos, BOARDY, false));
             boardPos++
         }else if(card.st_name === "Life"){
-            playerHealth.push(new Card(card.dk_id, card.crd_name, card.crd_atk, card.dk_crd_hp, card.crd_cost, card.st_name, false, HEATLHX, HEATLHY, false));
+            playerHealth.push(new Card(card.dk_id, card.dk_crd_id, card.crd_name, card.crd_atk, card.crd_stk, card.dk_crd_hp, card.crd_cost, card.st_name, false, HEATLHX, HEATLHY, false));
         }else{
-            discard.push(new Card(card.dk_id, card.crd_name, card.crd_atk, card.dk_crd_hp, card.crd_cost, card.st_name, false, DISCARDX, DISCARDY, false));
+            discard.push(new Card(card.dk_id, card.dk_crd_id, card.crd_name, card.crd_atk, card.crd_stk, card.dk_crd_hp, card.crd_cost, card.st_name, false, DISCARDX, DISCARDY, false));
         }
     }
     for (let card of opCards) {
         if (card.st_name === "Hand"){
-            opHand.push(new Card(card.dk_id, card.crd_name, card.crd_atk, card.dk_crd_hp, card.crd_cost, card.st_name, false, OPHANDX + CARDSPACE * opHandPos, OPHANDY, true));
+            opHand.push(new Card(card.dk_id, card.dk_crd_id, card.crd_name, card.crd_atk, card.crd_stk, card.dk_crd_hp, card.crd_cost, card.st_name, false, OPHANDX + CARDSPACE * opHandPos, OPHANDY, true));
             opHandPos++;
         }else if (card.st_name === "Board"){
-            opBoard.push(new Card(card.dk_id, card.crd_name, card.crd_atk, card.dk_crd_hp, card.crd_cost, card.st_name, false, OPBOARDX + CARDSPACE * opBoardPos, OPBOARDY, false));
+            opBoard.push(new Card(card.dk_id, card.dk_crd_id, card.crd_name, card.crd_atk, card.crd_stk, card.dk_crd_hp, card.crd_cost, card.st_name, false, OPBOARDX + CARDSPACE * opBoardPos, OPBOARDY, false));
             opBoardPos++;
         }else if (card.st_name === "Deck"){
-            opDeck.push(new Card(card.dk_id, card.crd_name, card.crd_atk, card.dk_crd_hp, card.crd_cost, card.st_name, false, OPDECKX, OPDECKY, true));
+            opDeck.push(new Card(card.dk_id, card.dk_crd_id, card.crd_name, card.crd_atk, card.crd_stk, card.dk_crd_hp, card.crd_cost, card.st_name, false, OPDECKX, OPDECKY, true));
+            
         }else if (card.st_name === "Life"){ 
-            opHealth.push(new Card(card.dk_id, card.crd_name, card.crd_atk, card.crd_hp, card.crd_cost, card.st_name, false, OPHEALTHX, OPHEALTHY, true));
+            opHealth.push(new Card(card.dk_id, card.dk_crd_id, card.crd_name, card.crd_atk, card.crd_stk, card.crd_hp, card.crd_cost, card.st_name, false, OPHEALTHX, OPHEALTHY, true));
            
         }else {
-            opDiscard.push(new Card(card.dk_id, card.crd_name, card.crd_atk, card.dk_crd_hp, card.crd_cost, card.st_name, false, OPDISCARDX, OPDISCARDY, true));
+            opDiscard.push(new Card(card.dk_id, card.dk_crd_id, card.crd_name, card.crd_atk, card.crd_stk, card.dk_crd_hp, card.crd_cost, card.st_name, false, OPDISCARDX, OPDISCARDY, true));
         }
-        
-       
     }
 }
 
 function draw() {
-    noStroke();
     scoreBoard.draw();
+    line(0, (windowHeight / 3), windowWidth, (windowHeight / 3));
 //  -------------- player side -----------------    
-    for (let card of deck) card.draw();
-    for (let card of board) card.draw();
-    for (let card of hand) card.draw();
-    for (let card of discard) card.draw();
-    for (let card of playerHealth) card.draw();
+    for (let card of deck) {card.draw();}    
+    for (let card of board) {card.draw()};
+    for (let card of hand) {card.draw()};
+    for (let card of discard) {card.draw()};
+    for (let card of playerHealth) {card.draw()};
 
 //  -------------- opponent side ---------------    
-    for (let card of opHand) card.draw();
-    for (let card of opDeck) card.draw();
-    for (let card of opBoard) card.draw();
-    for (let card of opDiscard) card.draw();
-    for (let card of opHealth) card.draw();
+    for (let card of opHand){
+        let opHandPos = 0;
+        card.draw();
+        image(cardBack, OPHANDX + 40.5 + CARDSPACE * opHandPos, OPHANDY + 82, 80, 160);
+        opHandPos++;
+    } 
+    for (let card of opDeck){
+        card.draw();
+        image(cardBack, OPDECKX + 40.5, OPDECKY + 82, 80, 160);
+    } 
+    for (let card of opBoard) {card.draw()};
+    for (let card of opDiscard) {card.draw()};
+    for (let card of opHealth) {card.draw()};
 
 // ---------------- buttons --------------------    
-    for (let button of buttons) button.draw();
-
+    for (let button of buttons){
+        button.draw();
+    } 
+    
 }
 
 function mouseClicked() {
     let card;
-    
-    card = returnSelected(deck);
-    if (card) card.clicked(mouseX, mouseY)
-    else for (let card of deck) card.clicked(mouseX, mouseY);
-
+   
     card = returnSelected(board);
-    if (card) card.clicked(mouseX, mouseY);
-    else for (let card of board) card.clicked(mouseX, mouseY);
+    if (card) {
+        if (card.clicked(mouseX, mouseY)) 
+            for (let card of opponent) card.deselect();    
+    } else for (let card of board) card.clicked(mouseX, mouseY);
     
     card = returnSelected(hand);
     if (card) card.clicked(mouseX, mouseY);
@@ -310,9 +324,50 @@ function mouseClicked() {
     for (let button of buttons) button.clicked(mouseX,mouseY);
 }
 
+function mouseHovered(){
+    let card;
+
+    card = returnHovered(board);
+    if (card) card.hover(mouseX, mouseY);
+    else for (let card of board) card.hover(mouseX, mouseY);
+    
+    card = returnHovered(hand);
+    if (card) card.hover(mouseX, mouseY);
+    else for (let card of hand) card.hover(mouseX, mouseY);
+    
+    card = returnHovered(opBoard);
+    if (card) card.hover(mouseX, mouseY);
+    else for (let card of opBoard) card.hover(mouseX, mouseY);
+}
+
 function returnSelected(cardList) {
     for(let card of cardList) {
         if (card.isSelected()) return card;
     }
     return null;
+}
+
+function returnHovered(cardList){
+    for(let card of cardList) {
+        if (card.isHovered()) return card;
+    }
+    return null;
+}
+
+async function endGame(playerId){
+    try {
+        let res = await requestPlayerMatchInfo(playerId);
+        if (gameOver == true){
+            if (res.mtc_winner == playerId){
+                alert("You won!");
+                window.location = "lobby.html";
+            }else{
+                alert("You lost!");
+                window.location = "lobby.html";
+            }
+            
+        }
+    } catch (err) {
+        console.log(err);
+    }
 }

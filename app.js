@@ -9,6 +9,7 @@ var playersRouter = require('./routes/playersRoutes');
 var cardsRouter = require('./routes/cardsRoutes');
 var LeaderboardRouter = require('./routes/leaderboardRoutes');
 
+var adminRouter = require('./routes/adminRoutes');
 
 var app = express();
 
@@ -22,4 +23,5 @@ app.use('/api/players', playersRouter);
 app.use('/api/cards', cardsRouter);
 app.use('/api/leaderboard', LeaderboardRouter);
 
+app.use('/api/admin', adminRouter);
 module.exports = app;

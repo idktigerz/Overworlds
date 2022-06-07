@@ -1,5 +1,6 @@
 let pId;
-
+setInterval(window.onload, 2000);
+ 
 window.onload = async function() {
     pId = sessionStorage.getItem("playerId");
     console.log(pId)
@@ -8,7 +9,7 @@ window.onload = async function() {
         let html = "";
         for (let match of matches) {
             html+= `<section onclick="join(${match.mtc_id})">
-                        <p> Join ${match.usr_name} </p>
+                        <p> Join ${match.usr_name}'s match </p>
                     </section>`
         }
         document.getElementById("matches").innerHTML = html;
