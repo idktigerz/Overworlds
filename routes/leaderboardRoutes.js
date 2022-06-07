@@ -3,7 +3,7 @@ var express = require('express');
 var router = express.Router();
 var lModel = require("../models/leaderboardModel");
 
-router.get('/match', async function(req, res, next){
+router.get('/matches', async function(req, res, next){
     console.log("Get Leaderboard info");
     let result = await lModel.getAllPlayersWins();
     res.status(result.status).send(result.result);

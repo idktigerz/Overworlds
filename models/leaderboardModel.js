@@ -4,7 +4,7 @@ module.exports.getAllPlayersWins = async function (){
     try{
       let sql = `SELECT count (* ), usr_name
                  FROM matches, users
-                 Where user_id = mtc_winner
+                 Where usr_id = mtc_winner
                  Group by usr_name;`
       let result = await pool.query(sql);
       if (result.rows.length > 0){
