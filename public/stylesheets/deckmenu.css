@@ -1,11 +1,6 @@
-@font-face {
-    font-family: "Glitch";
-    src: url(/fonts/Mokoto\ Glitch.ttf);
-  }
 * {
-   box-sizing: border-box;
-    
-}
+    box-sizing: border-box;
+  }
 
   body {
     margin: 0%;
@@ -66,9 +61,9 @@ header nav a{
 .Match{
     width: 335px;
     height: 95px;
-    background-image: url('/assets/v72_10.png');
+    background-image: url('/assets/v285_29.png');
     background-repeat: no-repeat;
-    background-size: contain;
+    background-size: cover;
     margin-left: 30px;
 
     float: left;
@@ -86,9 +81,9 @@ header nav a{
 .DeckMenu{
     width: 335px;
     height: 95px;
-    background-image: url('/assets/v72_2.png');
+    background-image: url('/assets/v72_7.png');
     background-repeat: no-repeat;
-    background-size: cover;
+    background-size: contain;
     margin-left: 30px;
 
     float: left;
@@ -148,61 +143,15 @@ header nav a{
     float: left;
 }
 
-/* Profile Table */
-.ProfileTable{
-    font-family: "Glitch", sans-serif;
-    color: white;
-    width: 400px;
-    height: 400px;
-    background-image: url('/assets/v273_46.png');
+.Table{
+    width: 1335px;
+    height: 595px;
+    background-image: url('/assets/v285_127.png');
     background-repeat: no-repeat;
     background-size: contain;
     margin-left: auto;
     margin-right: auto;
-    margin-top: 5%;
-}
-.Option{
-    font-size: 20px;
-    width: 305px;
-    height: 35px;
-    margin-left: auto;
-    margin-right: auto;
-    margin-top: 20px;
-
-}
-.CreateMatch{
-    font-size: 14px;
-    width: 180px;
-    height: 35px;
-    margin-left: auto;
-    margin-right: auto;
-    margin-top: 100px;
-}
-.CreateMatch:hover{
-    color: rgba(1, 255, 115, 0.945);
-    font-size: 14px;
-    width: 180px;
-    height: 35px;
-    margin-left: auto;
-    margin-right: auto;
-    margin-top: 100px;
-}
-
-.Join{
-    font-size: 14px;
-    width: 50px;
-    height: 35px;
-    margin-left: auto;
-    margin-right: auto;
-    margin-top: 25px;
-}
-
-.Join:hover{
-    color: rgba(1, 255, 115, 0.945);
-    font-size: 14px;
-    width: 50px;
-    height: 35px;
-    margin-left: auto;
-    margin-right: auto;
-    margin-top: 25px;
+    margin-top: 40px;
+  
+    position: relative;
 }
