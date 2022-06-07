@@ -1,0 +1,157 @@
+* {
+    box-sizing: border-box;
+  }
+
+  body {
+    margin: 0%;
+    padding: 0%;
+    background-image: url('/assets/v19_8.png');
+    background-color: black;
+    background-repeat: no-repeat;
+  }
+
+/* Changes down bellow */
+header{
+    width: 100vw;
+    height: 140px;
+/*     border-bottom: solid 1px rgba(16, 16, 16, 0.1);
+ */}
+
+
+/* LOGO */
+.logo{
+    display: table;
+    height: 100%;
+    float: left;
+    width: 199px;
+    height: 130px;
+    background-image: url('/assets/OVERWORLDS_LOGOTIPO.png');
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+
+
+/*  */
+header nav{
+    padding-top: 20px;
+    height: 100%;
+}
+
+
+
+
+/* header nav span {
+    display: table-cell;
+    vertical-align: middle;
+}
+
+header nav a{
+    color: #fceeee;
+} */
+
+/* My Code */
+.inner{
+    width: 1800px; /* This is the inner width of the content inside of your header (80%, etc) */
+    height: 100%;
+    display: block;
+    margin: 0 auto;
+}
+
+/* My Buttons */
+.Match{
+    width: 335px;
+    height: 95px;
+    background-image: url('/assets/v285_29.png');
+    background-repeat: no-repeat;
+    background-size: cover;
+    margin-left: 30px;
+
+    float: left;
+}
+.Leaderboard{
+    width: 335px;
+    height: 95px;
+    background-image: url('/assets/v285_27.png');
+    background-repeat: no-repeat;
+    background-size: cover;
+    margin-left: 140px;
+    float: left;
+}
+
+.DeckMenu{
+    width: 335px;
+    height: 95px;
+    background-image: url('/assets/v72_7.png');
+    background-repeat: no-repeat;
+    background-size: contain;
+    margin-left: 30px;
+
+    float: left;
+}
+
+.Profile{
+    width: 95px;
+    height: 95px;
+    background-image: url('/assets/v75_60.png');
+    background-repeat: no-repeat;
+    background-size: cover;
+    margin-left: 30px;
+
+    float: right;
+}
+
+.Setting{
+    width: 95px;
+    height: 95px;
+    background-image: url('/assets/v19_26.png');
+    background-repeat: no-repeat;
+    background-size: cover;
+    margin-left: 20px;
+
+    float: right;
+}
+
+/* Hover */
+.Match:hover{
+    width: 335px;
+    height: 95px;
+    background-image: url('/assets/v72_10.png');
+    background-repeat: no-repeat;
+    background-size: contain;
+    margin-left: 30px;
+
+    float: left;
+}
+.Leaderboard:hover{
+    width: 335px;
+    height: 95px;
+    background-image: url('/assets/v72_8.png');
+    background-repeat: no-repeat;
+    background-size: contain;
+    margin-left: 140px;
+    float: left;
+}
+
+.DeckMenu:hover{
+    width: 335px;
+    height: 95px;
+    background-image: url('/assets/v72_7.png');
+    background-repeat: no-repeat;
+    background-size: contain;
+    margin-left: 30px;
+
+    float: left;
+}
+
+.Table{
+    width: 1335px;
+    height: 595px;
+    background-image: url('/assets/v285_127.png');
+    background-repeat: no-repeat;
+    background-size: contain;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 40px;
+  
+    position: relative;
+}
